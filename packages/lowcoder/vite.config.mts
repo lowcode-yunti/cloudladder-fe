@@ -3,7 +3,7 @@ import { defineConfig, ServerOptions, UserConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import viteTsconfigPaths from "vite-tsconfig-paths";
 import svgrPlugin from "vite-plugin-svgr";
-import checker from "vite-plugin-checker";
+// import checker from "vite-plugin-checker";
 import { visualizer } from "rollup-plugin-visualizer";
 import path from "path";
 import chalk from "chalk";
@@ -13,9 +13,7 @@ import { buildVars } from "lowcoder-dev-utils/buildVars";
 import { globalDepPlugin } from "lowcoder-dev-utils/globalDepPlguin";
 
 dotenv.config();
-
-// const apiProxyTarget = process.env.LOWCODER_API_SERVICE_URL;
-const apiProxyTarget = 'https://dev.cloudladder.net.cn';
+const apiProxyTarget = process.env.LOWCODER_API_SERVICE_URL;
 const nodeServiceApiProxyTarget = process.env.NODE_SERVICE_API_PROXY_TARGET;
 const nodeEnv = process.env.NODE_ENV ?? "development";
 const edition = process.env.REACT_APP_EDITION;
