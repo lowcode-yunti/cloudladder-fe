@@ -8,8 +8,6 @@ WORKDIR /app
 # 拷贝所有项目文件到工作目录
 COPY . .
 
-RUN npm install yarn -g
-
 # 安装项目依赖（使用Yarn）
 RUN yarn
 
