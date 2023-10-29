@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": " LOWCODER_API_SERVICE_URL=https://dev.cloudladder.net.cn yarn workspace lowcoder start",
-    "preview": " API_PROXY_TARGET=http://192.168.31.46:3000 yarn workspace lowcoder preview",
+    "preview": "LOWCODER_API_SERVICE_URL=https://dev.cloudladder.net.cn yarn workspace lowcoder preview",
     "start:ee": "REACT_APP_EDITION=enterprise yarn workspace lowcoder start",
     "start:ee-global": "REACT_APP_EDITION=enterprise-global yarn workspace lowcoder start",
     "build": "yarn node ./scripts/build.js",
