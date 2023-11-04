@@ -25,6 +25,7 @@ export const DATASOURCE_URL = `/datasource`;
 export const DATASOURCE_CREATE_URL = `${DATASOURCE_URL}/new/:datasourceType`;
 export const DATASOURCE_EDIT_URL = `${DATASOURCE_URL}/:datasourceId`;
 export const QUERY_LIBRARY_URL = `/query-library`;
+export const APP_MANAGER_URL = `/app-manager`;
 export const FOLDER_URL_PREFIX = `/folder`;
 export const FOLDER_URL = `${FOLDER_URL_PREFIX}/:folderId`;
 export const FOLDERS_URL = `/folders`;
