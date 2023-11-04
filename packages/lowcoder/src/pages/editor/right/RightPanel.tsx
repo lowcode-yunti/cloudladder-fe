@@ -18,7 +18,8 @@ type RightPanelProps = {
 
 export default function RightPanel(props: RightPanelProps) {
   const { onTabChange, showPropertyPane, uiComp } = props;
-  const uiCompType = uiComp && (uiComp.children.compType.getView() as UiLayoutType);
+  const uiCompType =
+    uiComp && (uiComp.children.compType.getView() as UiLayoutType);
   const aggregationApp = uiCompType && isAggregationApp(uiCompType);
   const [activeKey, setActiveKey] = useState("insert");
   const tabConfigs = [
@@ -29,14 +30,14 @@ export default function RightPanel(props: RightPanelProps) {
       content: <PropertyView uiComp={uiComp} />,
     },
   ];
-  if (!aggregationApp) {
-    tabConfigs.push({
-      key: "insert",
-      title: trans("rightPanel.createTab"),
-      icon: <InsertIcon />,
-      content: <InsertView onCompDrag={props.onCompDrag} />,
-    });
-  }
+  // if (!aggregationApp) {
+  //   tabConfigs.push({
+  //     key: "insert",
+  //     title: trans("rightPanel.createTab"),
+  //     icon: <InsertIcon />,
+  //     content: <InsertView onCompDrag={props.onCompDrag} />,
+  //   });
+  // }
   useEffect(() => {
     const key = aggregationApp || showPropertyPane ? "property" : "insert";
     key !== activeKey && setActiveKey(key);
@@ -44,13 +45,15 @@ export default function RightPanel(props: RightPanelProps) {
 
   return (
     <RightPanelWrapper className="cypress-right-content">
-      <Tabs
-        onChange={(key) => {
-          onTabChange(key);
-        }}
-        tabsConfig={tabConfigs}
-        activeKey={activeKey}
-      />
+      {showPropertyPane && (
+        <Tabs
+          onChange={(key) => {
+            onTabChange(key);
+          }}
+          tabsConfig={tabConfigs}
+          activeKey={activeKey}
+        />
+      )}
     </RightPanelWrapper>
   );
 }
