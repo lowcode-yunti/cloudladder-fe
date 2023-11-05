@@ -1,5 +1,4 @@
 import {
-  ALL_APPLICATIONS_URL,
   APP_MANAGER_URL,
   DATASOURCE_URL,
   FLOW_MANAGER_URL,
@@ -29,7 +28,6 @@ import {
   HomeSettingsActiveIcon,
   HomeSettingsIcon,
   InviteUserIcon,
-  PlusIcon,
   PointIcon,
   RecyclerActiveIcon,
   RecyclerIcon,
@@ -56,6 +54,7 @@ import { TrashView } from "./TrashView";
 import { SideBarItemType } from "../../components/layout/SideBarSection";
 import { RootFolderListView } from "./RootFolderListView";
 import InviteDialog from "../common/inviteDialog";
+import { css as eCSS } from "@emotion/css";
 import {
   fetchFolderElements,
   updateFolder,
@@ -70,6 +69,7 @@ import { messageInstance } from "lowcoder-design";
 import { AppManager } from "../appManager/AppManager";
 import { FlowManager } from "../flowManager/FlowManager";
 import { PhantomManager } from "../phantomManager/PhantomManager";
+import { AliyunOutlined, ApartmentOutlined } from "@ant-design/icons";
 
 const TabLabel = styled.div`
   font-weight: 500;
@@ -249,6 +249,13 @@ const DivStyled = styled.div`
   }
 `;
 
+const classes = {
+  antdIcon: eCSS`
+    font-size: 20px;
+    margin-right: 4px;
+  `,
+};
+
 export default function ApplicationHome() {
   const dispatch = useDispatch();
   const [isPreloadCompleted, setIsPreloadCompleted] = useState(false);
@@ -424,9 +431,9 @@ export default function ApplicationHome() {
                 routeComp: FlowManager,
                 icon: ({ selected, ...otherProps }) =>
                   selected ? (
-                    <HomeQueryLibraryActiveIcon {...otherProps} />
+                    <ApartmentOutlined className={classes.antdIcon} />
                   ) : (
-                    <HomeQueryLibraryIcon {...otherProps} />
+                    <ApartmentOutlined className={classes.antdIcon} />
                   ),
                 visible: ({ user }) => user.orgDev,
               },
@@ -436,9 +443,9 @@ export default function ApplicationHome() {
                 routeComp: PhantomManager,
                 icon: ({ selected, ...otherProps }) =>
                   selected ? (
-                    <HomeQueryLibraryActiveIcon {...otherProps} />
+                    <AliyunOutlined className={classes.antdIcon} />
                   ) : (
-                    <HomeQueryLibraryIcon {...otherProps} />
+                    <AliyunOutlined className={classes.antdIcon} />
                   ),
                 visible: ({ user }) => user.orgDev,
               },
