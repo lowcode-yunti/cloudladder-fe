@@ -1,7 +1,7 @@
 import { Divider, Menu } from "antd";
 import Sider from "antd/lib/layout/Sider";
 import { PreloadComp } from "comps/comps/preLoadComp";
-import UIComp from "comps/comps/uiComp";
+import UIComp, { UiLayoutType } from "comps/comps/uiComp";
 import { EditorContext } from "comps/editorState";
 import { AppUILayoutType } from "constants/applicationConstants";
 import { Layers } from "constants/Layers";
@@ -332,6 +332,10 @@ function EditorView(props: EditorViewProps) {
     setMenuKey(params.key);
   };
   const appSettingsComp = editorState.getAppSettingsComp();
+  const uiCompType =
+    uiComp && (uiComp.children.compType.getView() as UiLayoutType);
+  const aggregationApp = uiCompType && isAggregationApp(uiCompType);
+
   return (
     <Height100Div
       onDragEnd={(e) => {
@@ -357,7 +361,10 @@ function EditorView(props: EditorViewProps) {
                 mode="inline"
                 defaultSelectedKeys={[SiderKey.State]}
                 selectedKeys={panelStatus.left ? [menuKey] : [""]}
-                items={items}
+                items={items.filter((item) => {
+                  if (item.key !== SiderKey.Widgets) return true;
+                  return !aggregationApp;
+                })}
                 disabled={showAppSnapshot}
                 onClick={(params) => clickMenu(params)}
               />

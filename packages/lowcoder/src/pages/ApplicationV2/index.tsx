@@ -2,10 +2,12 @@ import {
   ALL_APPLICATIONS_URL,
   APP_MANAGER_URL,
   DATASOURCE_URL,
+  FLOW_MANAGER_URL,
   FOLDER_URL,
   FOLDER_URL_PREFIX,
   FOLDERS_URL,
   MODULE_APPLICATIONS_URL,
+  PHANTOM_MANAGER_URL,
   QUERY_LIBRARY_URL,
   SETTING,
   TRASH_URL,
@@ -66,6 +68,8 @@ import Setting from "pages/setting";
 import { TypographyText } from "../../components/TypographyText";
 import { messageInstance } from "lowcoder-design";
 import { AppManager } from "../appManager/AppManager";
+import { FlowManager } from "../flowManager/FlowManager";
+import { PhantomManager } from "../phantomManager/PhantomManager";
 
 const TabLabel = styled.div`
   font-weight: 500;
@@ -408,9 +412,33 @@ export default function ApplicationHome() {
                 routeComp: AppManager,
                 icon: ({ selected, ...otherProps }) =>
                   selected ? (
-                    <HomeIcon {...otherProps} />
+                    <HomeActiveIcon {...otherProps} />
                   ) : (
                     <HomeIcon {...otherProps} />
+                  ),
+                visible: ({ user }) => user.orgDev,
+              },
+              {
+                text: <TabLabel>流程管理</TabLabel>,
+                routePath: FLOW_MANAGER_URL,
+                routeComp: FlowManager,
+                icon: ({ selected, ...otherProps }) =>
+                  selected ? (
+                    <HomeQueryLibraryActiveIcon {...otherProps} />
+                  ) : (
+                    <HomeQueryLibraryIcon {...otherProps} />
+                  ),
+                visible: ({ user }) => user.orgDev,
+              },
+              {
+                text: <TabLabel>智能体</TabLabel>,
+                routePath: PHANTOM_MANAGER_URL,
+                routeComp: PhantomManager,
+                icon: ({ selected, ...otherProps }) =>
+                  selected ? (
+                    <HomeQueryLibraryActiveIcon {...otherProps} />
+                  ) : (
+                    <HomeQueryLibraryIcon {...otherProps} />
                   ),
                 visible: ({ user }) => user.orgDev,
               },

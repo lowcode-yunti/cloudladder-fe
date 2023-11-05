@@ -51,56 +51,56 @@ export function SettingHome() {
       key: SettingPageEnum.Organization,
       label: trans("settings.organization"),
     },
-    {
-      key: SettingPageEnum.IdSource,
-      label: (
-        <span>
-          <span className="text">{trans("settings.idSource")}</span>
-          {(!currentOrgAdmin(user) ||
-            (!isSelfDomain(config) && !isEnterpriseMode(config))) && (
-            <FreeLimitTag text={trans("settings.premium")} />
-          )}
-        </span>
-      ),
-      disabled:
-        !currentOrgAdmin(user) ||
-        (!isSelfDomain(config) && !isEnterpriseMode(config)),
-    },
-    {
-      key: SettingPageEnum.Audit,
-      label: (
-        <span>
-          <span className="text">{trans("settings.audit")}</span>
-          {(!showAuditLog(config) || !currentOrgAdmin(user)) && (
-            <FreeLimitTag text={trans("settings.premium")} />
-          )}
-        </span>
-      ),
-      disabled: !showAuditLog(config) || !currentOrgAdmin(user),
-    },
+    // {
+    //   key: SettingPageEnum.IdSource,
+    //   label: (
+    //     <span>
+    //       <span className="text">{trans("settings.idSource")}</span>
+    //       {(!currentOrgAdmin(user) ||
+    //         (!isSelfDomain(config) && !isEnterpriseMode(config))) && (
+    //         <FreeLimitTag text={trans("settings.premium")} />
+    //       )}
+    //     </span>
+    //   ),
+    //   disabled:
+    //     !currentOrgAdmin(user) ||
+    //     (!isSelfDomain(config) && !isEnterpriseMode(config)),
+    // },
+    // {
+    //   key: SettingPageEnum.Audit,
+    //   label: (
+    //     <span>
+    //       <span className="text">{trans("settings.audit")}</span>
+    //       {(!showAuditLog(config) || !currentOrgAdmin(user)) && (
+    //         <FreeLimitTag text={trans("settings.premium")} />
+    //       )}
+    //     </span>
+    //   ),
+    //   disabled: !showAuditLog(config) || !currentOrgAdmin(user),
+    // },
     {
       key: SettingPageEnum.Theme,
       label: trans("settings.theme"),
     },
-    {
-      key: SettingPageEnum.Branding,
-      label: (
-        <span>
-          <span className="text">{trans("settings.branding")}</span>
-          {(!isEE() ||
-            !currentOrgAdmin(user) ||
-            !enableCustomBrand(config) ||
-            (!isSelfDomain(config) && !isEnterpriseMode(config))) && (
-            <FreeLimitTag text={trans("settings.premium")} />
-          )}
-        </span>
-      ),
-      disabled:
-        !isEE() ||
-        !currentOrgAdmin(user) ||
-        !enableCustomBrand(config) ||
-        (!isSelfDomain(config) && !isEnterpriseMode(config)),
-    },
+    // {
+    //   key: SettingPageEnum.Branding,
+    //   label: (
+    //     <span>
+    //       <span className="text">{trans("settings.branding")}</span>
+    //       {(!isEE() ||
+    //         !currentOrgAdmin(user) ||
+    //         !enableCustomBrand(config) ||
+    //         (!isSelfDomain(config) && !isEnterpriseMode(config))) && (
+    //         <FreeLimitTag text={trans("settings.premium")} />
+    //       )}
+    //     </span>
+    //   ),
+    //   disabled:
+    //     !isEE() ||
+    //     !currentOrgAdmin(user) ||
+    //     !enableCustomBrand(config) ||
+    //     (!isSelfDomain(config) && !isEnterpriseMode(config)),
+    // },
     {
       key: SettingPageEnum.Advanced,
       label: trans("settings.advanced"),
