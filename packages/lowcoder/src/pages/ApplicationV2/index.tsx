@@ -252,7 +252,7 @@ const DivStyled = styled.div`
 const classes = {
   antdIcon: eCSS`
     font-size: 20px;
-    margin-right: 4px;
+    margin-right: 8px;
   `,
 };
 
