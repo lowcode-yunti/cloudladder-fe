@@ -1,9 +1,9 @@
 # 使用官方的 Node.js 作为基础镜像，选择一个合适的版本
 FROM node:18 AS build
-
+RUN npm version
+RUN npm install -g yarn
 # 设置工作目录
 WORKDIR /app
-RUN npm install -g yarn
 
 # 拷贝 package.json 和 yarn.lock 文件到工作目录
 # 拷贝所有项目文件到工作目录
