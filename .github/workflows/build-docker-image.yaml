@@ -8,7 +8,7 @@ on:
 env:
 #  REGISTRY: ${{ secrets.REGISTRY_AI }}
   REGISTRY: registry.cn-wulanchabu.aliyuncs.com
-  IMAGE_NAME: modou-lowcode/lowcoder
+  IMAGE_NAME: cloudladder_shangyun/cloudladder-fe
 
 jobs:
   build-and-push-image:
@@ -44,8 +44,8 @@ jobs:
           context: .
           build-args: REACT_APP_COMMIT_ID=${{ steps.short-sha.outputs.short_sha }}
           push: true
-          file: ./deploy/docker/Dockerfile
+          file: ./Dockerfile
           tags: ${{env.REGISTRY}}/${{env.IMAGE_NAME}}:${{ steps.short-sha.outputs.short_sha }},${{env.REGISTRY}}/${{env.IMAGE_NAME}}:latest
           labels: ${{ steps.meta.outputs.labels }}
-          target: lowcoder-ce-frontend
+          target: lowcoder-frontend
           platform: linux/amd64,linux/arm64,linux/arm/v7
