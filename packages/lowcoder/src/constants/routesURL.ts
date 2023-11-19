@@ -25,6 +25,9 @@ export const DATASOURCE_URL = `/datasource`;
 export const DATASOURCE_CREATE_URL = `${DATASOURCE_URL}/new/:datasourceType`;
 export const DATASOURCE_EDIT_URL = `${DATASOURCE_URL}/:datasourceId`;
 export const QUERY_LIBRARY_URL = `/query-library`;
+export const APP_MANAGER_URL = ALL_APPLICATIONS_URL;
+export const FLOW_MANAGER_URL = `/flow-manager`;
+export const PHANTOM_MANAGER_URL = `/phantom-manager`;
 export const FOLDER_URL_PREFIX = `/folder`;
 export const FOLDER_URL = `${FOLDER_URL_PREFIX}/:folderId`;
 export const FOLDERS_URL = `/folders`;
@@ -55,9 +58,11 @@ export const isAuthUnRequired = (pathname: string): boolean => {
 
 export const buildDatasourceCreateUrl = (datasourceType: DatasourceType) =>
   `${DATASOURCE_URL}/new/${datasourceType}`;
-export const buildDatasourceEditUrl = (datasourceId: string) => `${DATASOURCE_URL}/${datasourceId}`;
+export const buildDatasourceEditUrl = (datasourceId: string) =>
+  `${DATASOURCE_URL}/${datasourceId}`;
 
-export const buildFolderUrl = (folderId: string) => `${FOLDER_URL_PREFIX}/${folderId}`;
+export const buildFolderUrl = (folderId: string) =>
+  `${FOLDER_URL_PREFIX}/${folderId}`;
 
 export const buildAppRouteWithState = (
   appId: string,
@@ -75,6 +80,7 @@ export function preview(applicationId: string) {
   window.open(APPLICATION_VIEW_URL(applicationId, "preview"));
 }
 
-export const buildGroupId = (groupId: string) => `${PERMISSION_SETTING}/${groupId}`;
+export const buildGroupId = (groupId: string) =>
+  `${PERMISSION_SETTING}/${groupId}`;
 
 export const buildOrgId = (orgId: string) => `${ORGANIZATION_SETTING}/${orgId}`;

@@ -1,10 +1,12 @@
 import {
-  ALL_APPLICATIONS_URL,
+  APP_MANAGER_URL,
   DATASOURCE_URL,
+  FLOW_MANAGER_URL,
   FOLDER_URL,
   FOLDER_URL_PREFIX,
   FOLDERS_URL,
   MODULE_APPLICATIONS_URL,
+  PHANTOM_MANAGER_URL,
   QUERY_LIBRARY_URL,
   SETTING,
   TRASH_URL,
@@ -26,14 +28,19 @@ import {
   HomeSettingsActiveIcon,
   HomeSettingsIcon,
   InviteUserIcon,
-  PlusIcon,
   PointIcon,
   RecyclerActiveIcon,
   RecyclerIcon,
 } from "lowcoder-design";
 import React, { useEffect, useState } from "react";
-import { fetchAllApplications, fetchHomeData } from "redux/reduxActions/applicationActions";
-import { getHomeOrg, normalAppListSelector } from "redux/selectors/applicationSelector";
+import {
+  fetchAllApplications,
+  fetchHomeData,
+} from "redux/reduxActions/applicationActions";
+import {
+  getHomeOrg,
+  normalAppListSelector,
+} from "redux/selectors/applicationSelector";
 import { DatasourceHome } from "../datasource";
 import { clearStyleEval, evalStyle } from "lowcoder-core";
 import { QueryLibraryEditor } from "../queryLibrary/QueryLibraryEditor";
@@ -47,7 +54,11 @@ import { TrashView } from "./TrashView";
 import { SideBarItemType } from "../../components/layout/SideBarSection";
 import { RootFolderListView } from "./RootFolderListView";
 import InviteDialog from "../common/inviteDialog";
-import { fetchFolderElements, updateFolder } from "../../redux/reduxActions/folderActions";
+import { css as eCSS } from "@emotion/css";
+import {
+  fetchFolderElements,
+  updateFolder,
+} from "../../redux/reduxActions/folderActions";
 import { ModuleView } from "./ModuleView";
 import { useCreateFolder } from "./useCreateFolder";
 import { trans } from "../../i18n";
@@ -55,6 +66,10 @@ import { foldersSelector } from "../../redux/selectors/folderSelector";
 import Setting from "pages/setting";
 import { TypographyText } from "../../components/TypographyText";
 import { messageInstance } from "lowcoder-design";
+import { AppManager } from "../appManager/AppManager";
+import { FlowManager } from "../flowManager/FlowManager";
+import { PhantomManager } from "../phantomManager/PhantomManager";
+import { AliyunOutlined, ApartmentOutlined } from "@ant-design/icons";
 
 const TabLabel = styled.div`
   font-weight: 500;
@@ -126,7 +141,11 @@ const FolderName = (props: { id: string; name: string }) => {
           setFolderNameEditing(false);
         }}
       />
-      <EditPopover items={[{ text: trans("rename"), onClick: () => setFolderNameEditing(true) }]}>
+      <EditPopover
+        items={[
+          { text: trans("rename"), onClick: () => setFolderNameEditing(true) },
+        ]}
+      >
         <PopoverIcon tabIndex={-1} />
       </EditPopover>
     </>
@@ -230,6 +249,13 @@ const DivStyled = styled.div`
   }
 `;
 
+const classes = {
+  antdIcon: eCSS`
+    font-size: 20px;
+    margin-right: 8px;
+  `,
+};
+
 export default function ApplicationHome() {
   const dispatch = useDispatch();
   const [isPreloadCompleted, setIsPreloadCompleted] = useState(false);
@@ -310,7 +336,9 @@ export default function ApplicationHome() {
       ...folderItems,
       {
         text: (props: { selected: boolean }) => (
-          <MoreFoldersWrapper selected={props.selected}>{trans("more")}</MoreFoldersWrapper>
+          <MoreFoldersWrapper selected={props.selected}>
+            {trans("more")}
+          </MoreFoldersWrapper>
         ),
         routePath: FOLDERS_URL,
         routeComp: RootFolderListView,
@@ -331,14 +359,122 @@ export default function ApplicationHome() {
     <DivStyled>
       <Layout
         sections={[
+          // {
+          //   items: [
+          //     {
+          //       text: <TabLabel>{trans("home.allApplications")}</TabLabel>,
+          //       routePath: ALL_APPLICATIONS_URL,
+          //       routeComp: HomeView,
+          //       icon: ({ selected, ...otherProps }) =>
+          //         selected ? <HomeActiveIcon {...otherProps} /> : <HomeIcon {...otherProps} />,
+          //     },
+          //     {
+          //       text: <TabLabel>{trans("home.modules")}</TabLabel>,
+          //       routePath: MODULE_APPLICATIONS_URL,
+          //       routeComp: ModuleView,
+          //       icon: ({ selected, ...otherProps }) =>
+          //         selected ? (
+          //           <HomeModuleActiveIcon {...otherProps} />
+          //         ) : (
+          //           <HomeModuleIcon {...otherProps} />
+          //         ),
+          //       visible: ({ user }) => user.orgDev,
+          //     },
+          //     {
+          //       text: <TabLabel>{trans("home.trash")}</TabLabel>,
+          //       routePath: TRASH_URL,
+          //       routeComp: TrashView,
+          //       icon: ({ selected, ...otherProps }) =>
+          //         selected ? (
+          //           <RecyclerActiveIcon {...otherProps} />
+          //         ) : (
+          //           <RecyclerIcon {...otherProps} />
+          //         ),
+          //       visible: ({ user }) => user.orgDev,
+          //     },
+          //   ],
+          // },
+          // allFolders.length > 0
+          //   ? {
+          //       title: (
+          //         <FolderSectionLabel>
+          //           {trans("home.folders")}
+          //           <FolderCountLabel>{`(${allFolders.length})`}</FolderCountLabel>
+          //           {user.orgDev && (
+          //             <CreateFolderIcon onClick={handleFolderCreate}>
+          //               <PlusIcon />
+          //             </CreateFolderIcon>
+          //           )}
+          //         </FolderSectionLabel>
+          //       ),
+          //       items: folderItems,
+          //       style: { marginTop: "8px" },
+          //     }
+          //   : { items: [] },
           {
             items: [
               {
-                text: <TabLabel>{trans("home.allApplications")}</TabLabel>,
-                routePath: ALL_APPLICATIONS_URL,
-                routeComp: HomeView,
+                text: <TabLabel>应用管理</TabLabel>,
+                routePath: APP_MANAGER_URL,
+                routeComp: AppManager,
                 icon: ({ selected, ...otherProps }) =>
-                  selected ? <HomeActiveIcon {...otherProps} /> : <HomeIcon {...otherProps} />,
+                  selected ? (
+                    <HomeActiveIcon {...otherProps} />
+                  ) : (
+                    <HomeIcon {...otherProps} />
+                  ),
+                visible: ({ user }) => user.orgDev,
+              },
+              {
+                text: <TabLabel>流程管理</TabLabel>,
+                routePath: FLOW_MANAGER_URL,
+                routeComp: FlowManager,
+                icon: ({ selected, ...otherProps }) =>
+                  selected ? (
+                    <ApartmentOutlined className={classes.antdIcon} />
+                  ) : (
+                    <ApartmentOutlined className={classes.antdIcon} />
+                  ),
+                visible: ({ user }) => user.orgDev,
+              },
+              {
+                text: <TabLabel>智能体</TabLabel>,
+                routePath: PHANTOM_MANAGER_URL,
+                routeComp: PhantomManager,
+                icon: ({ selected, ...otherProps }) =>
+                  selected ? (
+                    <AliyunOutlined className={classes.antdIcon} />
+                  ) : (
+                    <AliyunOutlined className={classes.antdIcon} />
+                  ),
+                visible: ({ user }) => user.orgDev,
+              },
+              {
+                text: <TabLabel>{trans("home.queryLibrary")}</TabLabel>,
+                routePath: QUERY_LIBRARY_URL,
+                routeComp: QueryLibraryEditor,
+                icon: ({ selected, ...otherProps }) =>
+                  selected ? (
+                    <HomeQueryLibraryActiveIcon {...otherProps} />
+                  ) : (
+                    <HomeQueryLibraryIcon {...otherProps} />
+                  ),
+                visible: ({ user }) => user.orgDev,
+              },
+              {
+                text: <TabLabel>{trans("home.datasource")}</TabLabel>,
+                routePath: DATASOURCE_URL,
+                routePathExact: false,
+                routeComp: DatasourceHome,
+                icon: ({ selected, ...otherProps }) =>
+                  selected ? (
+                    <HomeDataSourceActiveIcon {...otherProps} />
+                  ) : (
+                    <HomeDataSourceIcon {...otherProps} />
+                  ),
+                visible: ({ user }) => user.orgDev,
+                onSelected: (_, currentPath) =>
+                  currentPath.split("/")[1] === "datasource",
               },
               {
                 text: <TabLabel>{trans("home.modules")}</TabLabel>,
@@ -364,53 +500,6 @@ export default function ApplicationHome() {
                   ),
                 visible: ({ user }) => user.orgDev,
               },
-            ],
-          },
-          allFolders.length > 0
-            ? {
-                title: (
-                  <FolderSectionLabel>
-                    {trans("home.folders")}
-                    <FolderCountLabel>{`(${allFolders.length})`}</FolderCountLabel>
-                    {user.orgDev && (
-                      <CreateFolderIcon onClick={handleFolderCreate}>
-                        <PlusIcon />
-                      </CreateFolderIcon>
-                    )}
-                  </FolderSectionLabel>
-                ),
-                items: folderItems,
-                style: { marginTop: "8px" },
-              }
-            : { items: [] },
-          {
-            items: [
-              {
-                text: <TabLabel>{trans("home.queryLibrary")}</TabLabel>,
-                routePath: QUERY_LIBRARY_URL,
-                routeComp: QueryLibraryEditor,
-                icon: ({ selected, ...otherProps }) =>
-                  selected ? (
-                    <HomeQueryLibraryActiveIcon {...otherProps} />
-                  ) : (
-                    <HomeQueryLibraryIcon {...otherProps} />
-                  ),
-                visible: ({ user }) => user.orgDev,
-              },
-              {
-                text: <TabLabel>{trans("home.datasource")}</TabLabel>,
-                routePath: DATASOURCE_URL,
-                routePathExact: false,
-                routeComp: DatasourceHome,
-                icon: ({ selected, ...otherProps }) =>
-                  selected ? (
-                    <HomeDataSourceActiveIcon {...otherProps} />
-                  ) : (
-                    <HomeDataSourceIcon {...otherProps} />
-                  ),
-                visible: ({ user }) => user.orgDev,
-                onSelected: (_, currentPath) => currentPath.split("/")[1] === "datasource",
-              },
               {
                 text: <TabLabel>{trans("settings.title")}</TabLabel>,
                 routePath: SETTING,
@@ -423,7 +512,8 @@ export default function ApplicationHome() {
                     <HomeSettingsIcon {...otherProps} />
                   ),
                 visible: ({ user }) => user.orgDev,
-                onSelected: (_, currentPath) => currentPath.split("/")[1] === "setting",
+                onSelected: (_, currentPath) =>
+                  currentPath.split("/")[1] === "setting",
               },
             ],
           },

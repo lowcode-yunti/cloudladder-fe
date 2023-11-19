@@ -21,7 +21,8 @@ export const HomeResInfo: Record<
     icon: AllTypesIcon,
   },
   [HomeResTypeEnum.Application]: {
-    name: trans("home.app"),
+    // name: trans("home.app"),
+    name: "页面",
     icon: ApplicationDocIcon,
   },
   [HomeResTypeEnum.Module]: {
@@ -56,6 +57,8 @@ export const handleAppEditClick = (e: any, id: string): void => {
   }
 };
 
-export const handleAppViewClick = (id: string) => window.open(APPLICATION_VIEW_URL(id, "view"));
+export const handleAppViewClick = (id: string) =>
+  window.open(APPLICATION_VIEW_URL(id, "view"));
 
-export const handleFolderViewClick = (id: string) => history.push(buildFolderUrl(id));
+export const handleFolderViewClick = (id: string) =>
+  history.push(buildFolderUrl(id));
