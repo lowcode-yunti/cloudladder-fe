@@ -5,7 +5,7 @@ RUN npm version
 
 RUN corepack enable
 
-RUN corepack prepare yarn@4.0.2 --activate
+RUN corepack prepare yarn@3.2.4 --activate
 
 # 设置工作目录
 WORKDIR /app
