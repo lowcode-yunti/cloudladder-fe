@@ -14,7 +14,6 @@ import { CodeEditorPanel } from "../../pages/editor/codeEditorPanel";
 import { CodeEditorProps, StyleName } from "./codeEditorTypes";
 import { useClickCompNameEffect } from "./clickCompName";
 import { Layers } from "../../constants/Layers";
-import { OpenAIExtension } from "@lowcoder-ee/base/codeEditor/extensions/OpenAIExtension/OpenAIExtension";
 
 type StyleConfig = {
   minHeight: string;
@@ -201,9 +200,7 @@ export const CodeEditorTooltipContainer = styled.div`
 `;
 
 function getStyle(styleName?: StyleName) {
-  return styleName
-    ? styles[styleName]
-    : { minHeight: "auto", maxHeight: "180px" };
+  return styleName ? styles[styleName] : { minHeight: "auto", maxHeight: "180px" };
 }
 
 function useCodeMirror(
@@ -215,16 +212,12 @@ function useCodeMirror(
 
   // will not trigger view.setState when typing inputs, to avoid focus chaos
   const isTypingRef = useRef(0);
-  const showLineNum =
-    props.showLineNum ?? getStyle(props.styleName).showLineNum;
+  const showLineNum = props.showLineNum ?? getStyle(props.styleName).showLineNum;
 
   const handleChange = useCallback(
     (state: EditorState) => {
       window.clearTimeout(isTypingRef.current);
-      isTypingRef.current = window.setTimeout(
-        () => (isTypingRef.current = 0),
-        100
-      );
+      isTypingRef.current = window.setTimeout(() => (isTypingRef.current = 0), 100);
       onChange?.(state);
     },
     [onChange]
@@ -234,6 +227,7 @@ function useCodeMirror(
     ...props,
     showLineNum,
     onChange: handleChange,
+    tooltipContainer: container.current,
   });
   useEffect(() => reconfigure(viewRef.current), [reconfigure]);
   useEffect(() => {
@@ -243,10 +237,7 @@ function useCodeMirror(
      * 1. switch to the same type of comp
      * 2. change the current comp's value by dispatchChangeValueAction
      */
-    if (
-      !view ||
-      (!isTypingRef.current && value !== view.state.doc.toString())
-    ) {
+    if (!view || (!isTypingRef.current && value !== view.state.doc.toString())) {
       const state = EditorState.create({ doc: value, extensions });
       if (view) {
         view.setState(state);
@@ -256,12 +247,7 @@ function useCodeMirror(
     }
   }, [container, value, extensions]);
 
-  useClickCompNameEffect(
-    viewRef.current,
-    value,
-    props.codeType,
-    props.exposingData
-  );
+  useClickCompNameEffect(viewRef.current, value, props.codeType, props.exposingData);
 
   useEffect(() => {
     return () => {
@@ -348,9 +334,7 @@ const CodeEditorWrapper = styled.div`
 `;
 
 function canShowCard(props: CodeEditorProps) {
-  return (
-    !props.disableCard && (props.codeType !== "Function" || props.hasError)
-  );
+  return !props.disableCard && (props.codeType !== "Function" || props.hasError);
 }
 
 function CodeEditorCommon(
@@ -361,13 +345,10 @@ function CodeEditorCommon(
     cardStyle?: React.CSSProperties;
   }
 ) {
-  const { editor, children, disabled, cardStyle, onClick, ...editorProps } =
-    props;
+  const { editor, children, disabled, cardStyle, onClick, ...editorProps } = props;
   const { view, isFocus } = useCodeMirror(editorProps, editor);
   return (
-    <CodeEditorWrapper
-      onClick={onClick ? (e) => view && onClick(e, view) : undefined}
-    >
+    <CodeEditorWrapper onClick={onClick ? (e) => view && onClick(e, view) : undefined}>
       {!disabled && view && props.widgetPopup?.(view)}
       {children}
       <PopupCard
@@ -387,11 +368,7 @@ function CodeEditorCommon(
 function CodeEditorForPanel(props: CodeEditorProps) {
   const editor = useRef<HTMLDivElement>();
   return (
-    <CodeEditorCommon
-      {...props}
-      editor={editor}
-      cardStyle={{ borderRadius: "8px" }}
-    >
+    <CodeEditorCommon {...props} editor={editor} cardStyle={{ borderRadius: "8px" }}>
       <CodeEditorPanelContainer
         styleName={props.styleName}
         ref={editor as MutableRefObject<HTMLDivElement>}
@@ -409,7 +386,7 @@ export function CodeEditor(props: CodeEditorProps) {
   const { expandable = true, ...editorProps } = props;
   const [disabled, setDisabled] = useState(false);
   return (
-    <>
+    <CodeEditorTooltipContainer>
       <CodeEditorCommon {...editorProps} editor={editor} disabled={disabled}>
         <Container
           styleName={props.styleName}
@@ -422,22 +399,13 @@ export function CodeEditor(props: CodeEditorProps) {
           {expandable && (
             <CodeEditorPanel
               breadcrumb={[props.label ?? ""]}
-              editor={
-                <CodeEditorForPanel {...props} styleName="window" showLineNum />
-              }
+              editor={<CodeEditorForPanel {...props} styleName="window" showLineNum />}
               onVisibleChange={(visible) => setDisabled(visible)}
             />
           )}
         </Container>
-        <OpenAIExtension
-          language={props.language || "javascript"}
-          value={props.value}
-          onChange={props.onChange}
-          styleName={props.styleName}
-          exposingData={props.exposingData}
-        />
       </CodeEditorCommon>
-    </>
+    </CodeEditorTooltipContainer>
   );
 }
 

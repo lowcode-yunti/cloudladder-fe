@@ -1,23 +1,16 @@
 import { Divider, Menu } from "antd";
 import Sider from "antd/lib/layout/Sider";
 import { PreloadComp } from "comps/comps/preLoadComp";
-import UIComp, { UiLayoutType } from "comps/comps/uiComp";
+import UIComp from "comps/comps/uiComp";
 import { EditorContext } from "comps/editorState";
 import { AppUILayoutType } from "constants/applicationConstants";
 import { Layers } from "constants/Layers";
 import { TopHeaderHeight } from "constants/style";
 import { trans } from "i18n";
 import { draggingUtils } from "layout";
-import {
-  InsertIcon,
-  LeftPreloadIcon,
-  LeftSettingIcon,
-  LeftStateIcon,
-  ScrollBar,
-  VideoCompIcon,
-} from "lowcoder-design";
+import { LeftPreloadIcon, LeftSettingIcon, LeftStateIcon, ScrollBar } from "lowcoder-design";
 import { useTemplateViewMode } from "util/hooks";
-import Header, { PanelStatus, TogglePanel } from "pages/common/header";
+import Header, { PanelStatus, TogglePanel, EditorModeStatus, ToggleEditorModeStatus } from "pages/common/header";
 import { HelpDropdown } from "pages/common/help";
 import { PreviewHeader } from "pages/common/previewHeader";
 import {
@@ -35,17 +28,8 @@ import {
 } from "pages/editor/editorHotKeys";
 import RightPanel from "pages/editor/right/RightPanel";
 import EditorTutorials from "pages/tutorials/editorTutorials";
-import {
-  editorContentClassName,
-  UserGuideLocationState,
-} from "pages/tutorials/tutorialsConstant";
-import React, {
-  useCallback,
-  useContext,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from "react";
+import { editorContentClassName, UserGuideLocationState } from "pages/tutorials/tutorialsConstant";
+import React, { useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -54,15 +38,10 @@ import { currentApplication } from "redux/selectors/applicationSelector";
 import { showAppSnapshotSelector } from "redux/selectors/appSnapshotSelector";
 import styled from "styled-components";
 import { ExternalEditorContext } from "util/context/ExternalEditorContext";
-import {
-  DefaultPanelStatus,
-  getPanelStatus,
-  savePanelStatus,
-} from "util/localStorageUtil";
+import { DefaultPanelStatus, getPanelStatus, savePanelStatus, DefaultEditorModeStatus, getEditorModeStatus, saveEditorModeStatus } from "util/localStorageUtil";
 import Bottom from "./bottom/BottomPanel";
 import { LeftContent } from "./LeftContent";
 import { isAggregationApp } from "util/appUtils";
-import InsertView from "./right/InsertView";
 
 const HookCompContainer = styled.div`
   pointer-events: none;
@@ -187,7 +166,6 @@ interface EditorViewProps {
 enum SiderKey {
   State = "state",
   Setting = "setting",
-  Widgets = "widgets",
 }
 
 const items = [
@@ -199,11 +177,8 @@ const items = [
     key: SiderKey.Setting,
     icon: <LeftSettingIcon />,
   },
-  {
-    key: SiderKey.Widgets,
-    icon: <InsertIcon />,
-  },
 ];
+
 
 function EditorView(props: EditorViewProps) {
   const { uiComp } = props;
@@ -225,9 +200,9 @@ function EditorView(props: EditorViewProps) {
   const [panelStatus, setPanelStatus] = useState(() => {
     return showNewUserGuide ? DefaultPanelStatus : getPanelStatus();
   });
-  const [prePanelStatus, setPrePanelStatus] =
-    useState<PanelStatus>(DefaultPanelStatus);
 
+  const [prePanelStatus, setPrePanelStatus] = useState<PanelStatus>(DefaultPanelStatus);
+  
   const togglePanel: TogglePanel = useCallback(
     (key) => {
       let newPanelStatus;
@@ -248,6 +223,23 @@ function EditorView(props: EditorViewProps) {
     [panelStatus, prePanelStatus]
   );
 
+
+  // added by Falk Wolsky to support a Layout and Logic Mode in Lowcoder
+  const [editorModeStatus, setEditorModeStatus] = useState(() => {
+    return showNewUserGuide ? DefaultEditorModeStatus : getEditorModeStatus();
+  });
+  
+  const toggleEditorModeStatus: ToggleEditorModeStatus = useCallback( (value) => {
+
+      setEditorModeStatus(value ? value : "both" as EditorModeStatus);
+      saveEditorModeStatus(value ? value : "both" as EditorModeStatus);
+        
+    },
+    [editorModeStatus]
+  );
+
+
+  
   const onCompDrag = useCallback(
     (dragCompKey: string) => {
       editorState.setDraggingCompType(dragCompKey);
@@ -275,8 +267,7 @@ function EditorView(props: EditorViewProps) {
       setHeight(window.innerHeight);
     }
 
-    const eventType =
-      "orientationchange" in window ? "orientationchange" : "resize";
+    const eventType = "orientationchange" in window ? "orientationchange" : "resize";
     window.addEventListener(eventType, updateSize);
     updateSize();
     return () => window.removeEventListener(eventType, updateSize);
@@ -302,9 +293,7 @@ function EditorView(props: EditorViewProps) {
           <ViewBody hideBodyHeader={hideBodyHeader} height={height}>
             {uiComp.getView()}
           </ViewBody>
-          <div style={{ zIndex: Layers.hooksCompContainer }}>
-            {hookCompViews}
-          </div>
+          <div style={{ zIndex: Layers.hooksCompContainer }}>{hookCompViews}</div>
         </EditorContainerWithViewMode>
       </CustomShortcutWrapper>
     );
@@ -332,10 +321,6 @@ function EditorView(props: EditorViewProps) {
     setMenuKey(params.key);
   };
   const appSettingsComp = editorState.getAppSettingsComp();
-  const uiCompType =
-    uiComp && (uiComp.children.compType.getView() as UiLayoutType);
-  const aggregationApp = uiCompType && isAggregationApp(uiCompType);
-
   return (
     <Height100Div
       onDragEnd={(e) => {
@@ -344,7 +329,7 @@ function EditorView(props: EditorViewProps) {
         draggingUtils.clearData();
       }}
     >
-      <Header togglePanel={togglePanel} panelStatus={panelStatus} />
+      <Header togglePanel={togglePanel} panelStatus={panelStatus} toggleEditorModeStatus={toggleEditorModeStatus} editorModeStatus={editorModeStatus}  />
       <Helmet>{application && <title>{application.name}</title>}</Helmet>
       {showNewUserGuide && <EditorTutorials />}
       <EditorGlobalHotKeys
@@ -361,10 +346,7 @@ function EditorView(props: EditorViewProps) {
                 mode="inline"
                 defaultSelectedKeys={[SiderKey.State]}
                 selectedKeys={panelStatus.left ? [menuKey] : [""]}
-                items={items.filter((item) => {
-                  if (item.key !== SiderKey.Widgets) return true;
-                  return !aggregationApp;
-                })}
+                items={items}
                 disabled={showAppSnapshot}
                 onClick={(params) => clickMenu(params)}
               />
@@ -380,16 +362,14 @@ function EditorView(props: EditorViewProps) {
             </Sider>
           </SiderWrapper>
 
-          {panelStatus.left && (
+          {panelStatus.left && editorModeStatus !== "layout" && (
             <LeftPanel>
               {menuKey === SiderKey.State && <LeftContent uiComp={uiComp} />}
               {menuKey === SiderKey.Setting && (
                 <SettingsDiv>
                   <ScrollBar>
                     {application &&
-                      !isAggregationApp(
-                        AppUILayoutType[application.applicationType]
-                      ) && (
+                      !isAggregationApp(AppUILayoutType[application.applicationType]) && (
                         <>
                           {appSettingsComp.getPropertyView()}
                           <Divider />
@@ -399,11 +379,7 @@ function EditorView(props: EditorViewProps) {
                     {props.preloadComp.getPropertyView()}
                     <PreloadDiv
                       onClick={() =>
-                        dispatch(
-                          setEditorExternalStateAction({
-                            showScriptsAndStyleModal: true,
-                          })
-                        )
+                        dispatch(setEditorExternalStateAction({ showScriptsAndStyleModal: true }))
                       }
                     >
                       <LeftPreloadIcon />
@@ -413,9 +389,6 @@ function EditorView(props: EditorViewProps) {
 
                   {props.preloadComp.getJSLibraryPropertyView()}
                 </SettingsDiv>
-              )}
-              {menuKey === SiderKey.Widgets && (
-                <InsertView onCompDrag={onCompDrag} />
               )}
             </LeftPanel>
           )}
@@ -428,7 +401,7 @@ function EditorView(props: EditorViewProps) {
                 </EditorContainerWithViewMode>
               </EditorHotKeys>
             </EditorWrapper>
-            {panelStatus.bottom && <Bottom />}
+            {panelStatus.bottom && editorModeStatus !== "layout" && <Bottom />}
           </MiddlePanel>
           {showRight && (
             <RightPanel

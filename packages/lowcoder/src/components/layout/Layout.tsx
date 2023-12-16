@@ -9,9 +9,6 @@ import SideBar from "components/layout/SideBar";
 import { CNMainContent, CNSidebar } from "constants/styleSelectors";
 import { SideBarSection, SideBarSectionProps } from "./SideBarSection";
 import styled from "styled-components";
-import { FOLDER_URL, FOLDERS_URL } from "../../constants/routesURL";
-import { RootFolderListView } from "../../pages/ApplicationV2/RootFolderListView";
-import { FolderView } from "../../pages/ApplicationV2/FolderView";
 
 type LayoutProps = {
   sections: SideBarSectionProps[];
@@ -33,14 +30,7 @@ const SideBarV2 = styled(SideBar)`
 `;
 
 export function Layout(props: LayoutProps) {
-  const routes: ReactElement[] = [
-    <Route
-      key={FOLDER_URL}
-      component={FolderView}
-      exact={true}
-      path={FOLDER_URL}
-    />,
-  ];
+  const routes: ReactElement[] = [];
   props.sections.forEach((section) => {
     section.items.forEach((item) => {
       routes.push(

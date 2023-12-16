@@ -51,6 +51,7 @@ const SimplePopover = (props: {
   setVisible?: (vis: boolean) => void;
   children: JSX.Element | React.ReactNode;
   content: JSX.Element | React.ReactNode;
+  scrollable?: boolean;
 }) => {
   const { visible, setVisible } = props;
   const contentWithBox = (
@@ -58,6 +59,7 @@ const SimplePopover = (props: {
       title={props.title}
       onClose={() => setVisible?.(false)}
       content={props.content}
+      scrollable={props.scrollable}
     />
   );
   return (
@@ -66,7 +68,7 @@ const SimplePopover = (props: {
       align={{
         offset: [-12, 0, 0, 0],
       }}
-      destroyTooltipOnHide
+      // destroyTooltipOnHide
       content={contentWithBox}
       trigger="click"
       open={visible}
@@ -122,6 +124,7 @@ export interface EditPopoverProps extends PopoverProps {
   items?: EditPopoverItemType[]; // FIXME: refactor props below into this structure
   addText?: string;
   add?: () => void;
+  edit?: () => void;
   rename?: () => void;
   copy?: () => void;
   del?: () => void;
@@ -134,6 +137,7 @@ const EditPopover = (props: EditPopoverProps) => {
     items,
     addText,
     add,
+    edit,
     rename,
     copy,
     del,
@@ -191,6 +195,17 @@ const EditPopover = (props: EditPopoverProps) => {
               }}
             >
               <HandleText>{addText || trans("addItem")}</HandleText>
+            </Handle>
+          )}
+          {edit && (
+            <Handle
+              onClick={(e) => {
+                e.stopPropagation();
+                edit?.();
+                hide();
+              }}
+            >
+              <HandleText>{trans("edit")}</HandleText>
             </Handle>
           )}
           {copy && (

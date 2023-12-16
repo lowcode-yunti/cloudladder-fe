@@ -5,12 +5,7 @@ import { AdvancedSetting } from "./advanced/AdvancedSetting";
 import { currentOrgAdmin } from "util/permissionUtils";
 import { trans } from "i18n";
 import AuditSetting from "@lowcoder-ee/pages/setting/audit";
-import {
-  isEE,
-  isEnterpriseMode,
-  isSelfDomain,
-  showAuditLog,
-} from "util/envUtils";
+import { isEE, isEnterpriseMode, isSelfDomain, showAuditLog } from "util/envUtils";
 import { TwoColumnSettingPageContent } from "./styled";
 import SubSideBar from "components/layout/SubSideBar";
 import { Menu } from "lowcoder-design";
@@ -23,91 +18,98 @@ import { IdSourceHome } from "@lowcoder-ee/pages/setting/idSource";
 import { selectSystemConfig } from "redux/selectors/configSelectors";
 import { enableCustomBrand } from "util/featureFlagUtils";
 import FreeLimitTag from "pages/common/freeLimitTag";
-import { SettingSetting } from "@lowcoder-ee/pages/setting/setting";
 
 enum SettingPageEnum {
-  Member = "permission",
+  UserGroups = "permission",
   Organization = "organization",
   Audit = "audit",
   Theme = "theme",
   Branding = "branding",
   Advanced = "advanced",
-  IdSource = "idsource",
-  Setting = "Setting",
+  OAuthProvider = "oauth-provider",
+  AppUsage = "app-usage",
+  Environments = "environments",
 }
 
 export function SettingHome() {
   const user = useSelector(getUser);
   const config = useSelector(selectSystemConfig);
-  const selectKey =
-    useParams<{ setting: string }>().setting || SettingPageEnum.Member;
+  const selectKey = useParams<{ setting: string }>().setting || SettingPageEnum.UserGroups;
 
   const items = [
     {
-      key: SettingPageEnum.Member,
-      label: trans("settings.member"),
+      key: SettingPageEnum.UserGroups,
+      label: trans("settings.userGroups"),
     },
     {
       key: SettingPageEnum.Organization,
       label: trans("settings.organization"),
     },
-    // {
-    //   key: SettingPageEnum.IdSource,
-    //   label: (
-    //     <span>
-    //       <span className="text">{trans("settings.idSource")}</span>
-    //       {(!currentOrgAdmin(user) ||
-    //         (!isSelfDomain(config) && !isEnterpriseMode(config))) && (
-    //         <FreeLimitTag text={trans("settings.premium")} />
-    //       )}
-    //     </span>
-    //   ),
-    //   disabled:
-    //     !currentOrgAdmin(user) ||
-    //     (!isSelfDomain(config) && !isEnterpriseMode(config)),
-    // },
-    // {
-    //   key: SettingPageEnum.Audit,
-    //   label: (
-    //     <span>
-    //       <span className="text">{trans("settings.audit")}</span>
-    //       {(!showAuditLog(config) || !currentOrgAdmin(user)) && (
-    //         <FreeLimitTag text={trans("settings.premium")} />
-    //       )}
-    //     </span>
-    //   ),
-    //   disabled: !showAuditLog(config) || !currentOrgAdmin(user),
-    // },
     {
       key: SettingPageEnum.Theme,
       label: trans("settings.theme"),
     },
-    // {
-    //   key: SettingPageEnum.Branding,
-    //   label: (
-    //     <span>
-    //       <span className="text">{trans("settings.branding")}</span>
-    //       {(!isEE() ||
-    //         !currentOrgAdmin(user) ||
-    //         !enableCustomBrand(config) ||
-    //         (!isSelfDomain(config) && !isEnterpriseMode(config))) && (
-    //         <FreeLimitTag text={trans("settings.premium")} />
-    //       )}
-    //     </span>
-    //   ),
-    //   disabled:
-    //     !isEE() ||
-    //     !currentOrgAdmin(user) ||
-    //     !enableCustomBrand(config) ||
-    //     (!isSelfDomain(config) && !isEnterpriseMode(config)),
-    // },
+    {
+      key: SettingPageEnum.OAuthProvider,
+      label: (
+         <span className="text">{trans("settings.oauthProviders")}</span>
+      ),
+      disabled: !currentOrgAdmin(user),
+    },
+    {
+      key: SettingPageEnum.Environments,
+      label: (
+        <span>
+          <span className="text">{trans("settings.environments")}</span>
+          <FreeLimitTag text={trans("settings.premium")} />
+        </span>
+      ),
+      disabled: true,
+    },
+    {
+      key: SettingPageEnum.AppUsage,
+      label: (
+        <span>
+          <span className="text">{trans("settings.appUsage")}</span>
+          <FreeLimitTag text={trans("settings.premium")} />
+        </span>
+      ),
+      disabled: true,
+    },
+    {
+      key: SettingPageEnum.Audit,
+      label: (
+        <span>
+          <span className="text">{trans("settings.audit")}</span>
+          {(!showAuditLog(config) || !currentOrgAdmin(user)) && (
+            <FreeLimitTag text={trans("settings.premium")} />
+          )}
+        </span>
+      ),
+      disabled: !showAuditLog(config) || !currentOrgAdmin(user),
+    },
+    {
+      key: SettingPageEnum.Branding,
+      label: (
+        <span>
+          <span className="text">{trans("settings.branding")}</span>
+          {(!isEE() ||
+            !currentOrgAdmin(user) ||
+            !enableCustomBrand(config) ||
+            (!isSelfDomain(config) && !isEnterpriseMode(config))) && (
+            <FreeLimitTag text={trans("settings.premium")} />
+          )}
+        </span>
+      ),
+      disabled:
+        !isEE() ||
+        !currentOrgAdmin(user) ||
+        !enableCustomBrand(config) ||
+        (!isSelfDomain(config) && !isEnterpriseMode(config)),
+    },
     {
       key: SettingPageEnum.Advanced,
       label: trans("settings.advanced"),
-    },
-    {
-      key: SettingPageEnum.Setting,
-      label: "全局配置",
     },
   ];
 
@@ -123,14 +125,13 @@ export function SettingHome() {
           items={items}
         />
       </SubSideBar>
-      {selectKey === SettingPageEnum.Member && <PermissionSetting />}
+      {selectKey === SettingPageEnum.UserGroups && <PermissionSetting />}
       {selectKey === SettingPageEnum.Organization && <Organization />}
-      {selectKey === SettingPageEnum.Audit && <AuditSetting />}
       {selectKey === SettingPageEnum.Theme && <ThemeHome />}
+      {selectKey === SettingPageEnum.OAuthProvider && <IdSourceHome />}
+      {selectKey === SettingPageEnum.Audit && <AuditSetting />}
       {selectKey === SettingPageEnum.Branding && <BrandingSetting />}
       {selectKey === SettingPageEnum.Advanced && <AdvancedSetting />}
-      {selectKey === SettingPageEnum.IdSource && <IdSourceHome />}
-      {selectKey === SettingPageEnum.Setting && <SettingSetting />}
     </TwoColumnSettingPageContent>
   );
 }

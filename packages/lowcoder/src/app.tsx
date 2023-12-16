@@ -2,20 +2,19 @@ import { App, ConfigProvider } from "antd";
 import {
   ALL_APPLICATIONS_URL,
   APP_EDITOR_URL,
-  APP_MANAGER_URL,
   APPLICATION_VIEW_URL,
   BASE_URL,
   COMPONENT_DOC_URL,
   DATASOURCE_CREATE_URL,
   DATASOURCE_EDIT_URL,
   DATASOURCE_URL,
-  FLOW_MANAGER_URL,
   FOLDER_URL,
   FOLDERS_URL,
   IMPORT_APP_FROM_TEMPLATE_URL,
   INVITE_LANDING_URL,
   isAuthUnRequired,
-  PHANTOM_MANAGER_URL,
+  ORG_AUTH_LOGIN_URL,
+  ORG_AUTH_REGISTER_URL,
   QUERY_LIBRARY_URL,
   SETTING,
   TRASH_URL,
@@ -40,33 +39,28 @@ import { CodeEditorTooltipContainer } from "base/codeEditor/codeEditor";
 import { ProductLoading } from "components/ProductLoading";
 import { language, trans } from "i18n";
 import { loadComps } from "comps";
-import { fetchHomeData } from "redux/reduxActions/applicationActions";
 import { initApp } from "util/commonUtils";
 import ApplicationHome from "./pages/ApplicationV2";
 import { favicon } from "@lowcoder-ee/assets/images";
 import { hasQueryParam } from "util/urlUtils";
 import { isFetchUserFinished } from "redux/selectors/usersSelectors";
 import { SystemWarning } from "./components/SystemWarning";
-import {
-  getBrandingConfig,
-  getSystemConfigFetching,
-} from "./redux/selectors/configSelectors";
+import { getBrandingConfig } from "./redux/selectors/configSelectors";
 import { buildMaterialPreviewURL } from "./util/materialUtils";
-import GlobalInstances from "components/GlobalInstances";
+import GlobalInstances from 'components/GlobalInstances';
 
 const LazyUserAuthComp = React.lazy(() => import("pages/userAuth"));
-const LazyInviteLanding = React.lazy(
-  () => import("pages/common/inviteLanding")
-);
+const LazyInviteLanding = React.lazy(() => import("pages/common/inviteLanding"));
 const LazyComponentDoc = React.lazy(() => import("pages/ComponentDoc"));
-const LazyComponentPlayground = React.lazy(
-  () => import("pages/ComponentPlayground")
-);
+const LazyComponentPlayground = React.lazy(() => import("pages/ComponentPlayground"));
 const LazyDebugComp = React.lazy(() => import("./debug"));
 const LazyDebugNewComp = React.lazy(() => import("./debugNew"));
 
 const Wrapper = (props: { children: React.ReactNode }) => (
-  <ConfigProvider theme={{ hashed: false }} locale={getAntdLocale(language)}>
+  <ConfigProvider
+    theme={{ hashed: false }}
+    locale={getAntdLocale(language)}
+  >
     <App>
       <GlobalInstances />
       {props.children}
@@ -76,13 +70,11 @@ const Wrapper = (props: { children: React.ReactNode }) => (
 
 type AppIndexProps = {
   isFetchUserFinished: boolean;
-  isFetchHomeFinished: boolean;
-  isFetchingConfig: boolean;
+  currentOrgId?: string;
   orgDev: boolean;
   defaultHomePage: string | null | undefined;
-  fetchConfig: () => void;
+  fetchConfig: (orgId?: string) => void;
   getCurrentUser: () => void;
-  fetchHome: () => void;
   favicon: string;
   brandName: string;
 };
@@ -90,15 +82,11 @@ type AppIndexProps = {
 class AppIndex extends React.Component<AppIndexProps, any> {
   componentDidMount() {
     this.props.getCurrentUser();
-    this.props.fetchConfig();
-    if (history.location.pathname === BASE_URL) {
-      this.props.fetchHome();
-    }
   }
 
-  componentDidUpdate() {
-    if (history.location.pathname === BASE_URL) {
-      this.props.fetchHome();
+  componentDidUpdate(prevProps: AppIndexProps) {
+    if(prevProps.currentOrgId !== this.props.currentOrgId && this.props.currentOrgId !== '') {
+      this.props.fetchConfig(this.props.currentOrgId);
     }
   }
 
@@ -106,11 +94,7 @@ class AppIndex extends React.Component<AppIndexProps, any> {
     const isTemplate = hasQueryParam("template");
     const pathname = history.location.pathname;
     // make sure all users in this app have checked login info
-    if (
-      !this.props.isFetchUserFinished ||
-      this.props.isFetchingConfig ||
-      (pathname === BASE_URL && !this.props.isFetchHomeFinished)
-    ) {
+    if (!this.props.isFetchUserFinished) {
       const hideLoadingHeader = isTemplate || isAuthUnRequired(pathname);
       return <ProductLoading hideHeader={hideLoadingHeader} />;
     }
@@ -140,11 +124,7 @@ class AppIndex extends React.Component<AppIndexProps, any> {
                 to={APPLICATION_VIEW_URL(this.props.defaultHomePage, "view")}
               />
             )}
-            <Route
-              exact
-              path={IMPORT_APP_FROM_TEMPLATE_URL}
-              component={AppFromTemplate}
-            />
+            <Route exact path={IMPORT_APP_FROM_TEMPLATE_URL} component={AppFromTemplate} />
             <Route path={APP_EDITOR_URL} component={AppEditor} />
             <Route
               path={[
@@ -153,9 +133,6 @@ class AppIndex extends React.Component<AppIndexProps, any> {
                 DATASOURCE_EDIT_URL,
                 DATASOURCE_URL,
                 QUERY_LIBRARY_URL,
-                APP_MANAGER_URL,
-                FLOW_MANAGER_URL,
-                PHANTOM_MANAGER_URL,
                 FOLDERS_URL,
                 FOLDER_URL,
                 TRASH_URL,
@@ -165,18 +142,11 @@ class AppIndex extends React.Component<AppIndexProps, any> {
               component={ApplicationHome}
             />
             <LazyRoute path={USER_AUTH_URL} component={LazyUserAuthComp} />
-            <LazyRoute
-              path={INVITE_LANDING_URL}
-              component={LazyInviteLanding}
-            />
-            <LazyRoute
-              path={`${COMPONENT_DOC_URL}/:name`}
-              component={LazyComponentDoc}
-            />
-            <LazyRoute
-              path={`/playground/:name/:dsl`}
-              component={LazyComponentPlayground}
-            />
+            <LazyRoute path={ORG_AUTH_LOGIN_URL} component={LazyUserAuthComp} />
+            <LazyRoute path={ORG_AUTH_REGISTER_URL} component={LazyUserAuthComp} />
+            <LazyRoute path={INVITE_LANDING_URL} component={LazyInviteLanding} />
+            <LazyRoute path={`${COMPONENT_DOC_URL}/:name`} component={LazyComponentDoc} />
+            <LazyRoute path={`/playground/:name/:dsl`} component={LazyComponentPlayground} />
             <Redirect to={`${COMPONENT_DOC_URL}/input`} path="/components" />
 
             {developEnv() && (
@@ -189,7 +159,6 @@ class AppIndex extends React.Component<AppIndexProps, any> {
             )}
           </Switch>
         </Router>
-        <CodeEditorTooltipContainer />
       </Wrapper>
     );
   }
@@ -197,10 +166,9 @@ class AppIndex extends React.Component<AppIndexProps, any> {
 
 const mapStateToProps = (state: AppState) => ({
   isFetchUserFinished: isFetchUserFinished(state),
-  isFetchingConfig: getSystemConfigFetching(state),
   orgDev: state.ui.users.user.orgDev,
+  currentOrgId: state.ui.users.user.currentOrgId,
   defaultHomePage: state.ui.application.homeOrg?.commonSettings.defaultHomePage,
-  isFetchHomeFinished: state.ui.application.loadingStatus.fetchHomeDataFinished,
   favicon: getBrandingConfig(state)?.favicon
     ? buildMaterialPreviewURL(getBrandingConfig(state)?.favicon!)
     : favicon,
@@ -211,14 +179,10 @@ const mapDispatchToProps = (dispatch: any) => ({
   getCurrentUser: () => {
     dispatch(fetchUserAction());
   },
-  fetchConfig: () => dispatch(fetchConfigAction()),
-  fetchHome: () => dispatch(fetchHomeData({})),
+  fetchConfig: (orgId?: string) => dispatch(fetchConfigAction(orgId)),
 });
 
-const AppIndexWithProps = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AppIndex);
+const AppIndexWithProps = connect(mapStateToProps, mapDispatchToProps)(AppIndex);
 
 export function bootstrap() {
   initApp();
