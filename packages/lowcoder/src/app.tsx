@@ -20,6 +20,9 @@ import {
   SETTING,
   TRASH_URL,
   USER_AUTH_URL,
+  AUTH_CAPTCHA_URL,
+  VERIFY_RANDOMCODE_URL,
+  AUTH_RESETPASSWORD_URL,
 } from "constants/routesURL";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -43,6 +46,9 @@ import { loadComps } from "comps";
 import { fetchHomeData } from "redux/reduxActions/applicationActions";
 import { initApp } from "util/commonUtils";
 import ApplicationHome from "./pages/ApplicationV2";
+import Captcha from "./pages/userAuth/captchaPage";
+import Verify from "./pages/userAuth/verifyEmail";
+ import ResetPassword from "./pages/userAuth/resetPassword";
 import { favicon } from "@lowcoder-ee/assets/images";
 import { hasQueryParam } from "util/urlUtils";
 import { isFetchUserFinished } from "redux/selectors/usersSelectors";
@@ -164,6 +170,9 @@ class AppIndex extends React.Component<AppIndexProps, any> {
               // component={ApplicationListPage}
               component={ApplicationHome}
             />
+            <Route path={AUTH_CAPTCHA_URL} component={Captcha}></Route>
+            <Route path={VERIFY_RANDOMCODE_URL} component={Verify}></Route>
+            <Route path={AUTH_RESETPASSWORD_URL} component={ResetPassword}></Route>
             <LazyRoute path={USER_AUTH_URL} component={LazyUserAuthComp} />
             <LazyRoute
               path={INVITE_LANDING_URL}

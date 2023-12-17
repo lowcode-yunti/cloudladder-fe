@@ -23,6 +23,7 @@ const isDev = nodeEnv === "development";
 const isVisualizerEnabled = !!process.env.ENABLE_VISUALIZER;
 const browserCheckFileName = `browser-check-${process.env.REACT_APP_COMMIT_ID}.js`;
 const base = ensureLastSlash(process.env.PUBLIC_URL);
+console.log('apiProxyTarget',apiProxyTarget)
 
 if (!apiProxyTarget && isDev) {
   console.log();

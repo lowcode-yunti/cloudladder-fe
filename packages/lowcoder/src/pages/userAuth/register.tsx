@@ -23,6 +23,26 @@ const StyledFormInput = styled(FormInput)`
   margin-bottom: 16px;
 `;
 
+const StyledButtonLeft = styled.div`
+margin-bottom: 8px;
+display: flex;
+align-items: center;
+margin-right: auto; 
+
+font-size: 16px;
+color: #4965f2;
+line-height: 16px;
+cursor: pointer; 
+
+:hover {
+  color: #315efb;
+}
+
+@media screen and (max-width: 640px) {
+  margin-bottom: 0;
+}
+`;
+
 const StyledPasswordInput = styled(PasswordInput)`
   margin-bottom: 16px;
 `;
@@ -43,10 +63,18 @@ const TermsAndPrivacyInfoWrapper = styled.div`
   }
 `;
 
+const FlexContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -80px; 
+`;
+
 function UserRegister() {
   const [submitBtnDisable, setSubmitBtnDisable] = useState(false);
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
+  const [verificationCode, setVerificationCode] = useState(""); //code
   const redirectUrl = useRedirectUrl();
   const location = useLocation();
   const { systemConfig, inviteInfo } = useContext(AuthContext);
@@ -64,6 +92,61 @@ function UserRegister() {
     false,
     redirectUrl
   );
+
+  const sendRegisterButton = async () => {
+    if (!checkEmailValid(account)) {
+      alert('Please enter a valid email address!');
+      return;
+    }
+
+
+    try {
+      
+      const response = await UserApi.sendRegisterMail({ name: account });
+
+      if (response.data === 'Email sent successfully') {
+        alert('Email sent successfully! Please check your email for the verification code.');
+
+      } else {
+        alert('Email sent failed!');
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 500) {
+        alert('Email sent failed!');
+      } else {
+        console.error('Email sent failed!', error);
+      }
+    }
+  };
+ 
+
+  const verifyCode = async () => {
+    try {
+      const response = await UserApi.verifyRegisterCode({ name: account, inputCode: verificationCode });
+
+      if (response.data === 'Verification successful') {
+        alert('Verification successful! You can now proceed with registration.');
+        // Enable registration button here
+      } else {
+        alert('Verification failed!');
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 500) {
+        alert('Verification failed!');
+      } else {
+        console.error('Verification failed!', error);
+      }
+    }
+  };
+
+  const handleVerificationCodeChange = (value: string) => {
+    setVerificationCode(value);
+    if (value.length === 8) {
+      verifyCode();
+    }
+  };
+
+
   if (!systemConfig || !systemConfig.form.enableRegister) {
     return null;
   }
@@ -82,6 +165,12 @@ function UserRegister() {
             errorMsg: trans("userAuth.inputValidEmail"),
           }}
         />
+        <StyledFormInput
+          className="form-input"
+          label={trans('userAuth.verificationCode')}
+          onChange={handleVerificationCodeChange}
+          placeholder={trans('userAuth.enterEmailVerificationCode')}
+        />
         <StyledPasswordInput
           className="form-input"
           valueCheck={checkPassWithMsg}
@@ -89,7 +178,7 @@ function UserRegister() {
           doubleCheck
         />
         <ConfirmButton
-          disabled={!account || !password || submitBtnDisable}
+          disabled={!account || !verificationCode || !password || submitBtnDisable}
           onClick={onSubmit}
           loading={loading}
         >
@@ -98,9 +187,12 @@ function UserRegister() {
         <TermsAndPrivacyInfoWrapper>
           <TermsAndPrivacyInfo onCheckChange={(e) => setSubmitBtnDisable(!e.target.checked)} />
         </TermsAndPrivacyInfoWrapper>
-        <StyledRouteLinkLogin to={{ pathname: AUTH_LOGIN_URL, state: location.state }}>
-          {trans("userAuth.userLogin")}
-        </StyledRouteLinkLogin>
+        <FlexContainer>
+          <StyledButtonLeft onClick={sendRegisterButton}>{trans('userAuth.sendEmail')}</StyledButtonLeft>
+          <StyledRouteLinkLogin to={{ pathname: AUTH_LOGIN_URL, state: location.state }}>
+            {trans("userAuth.userLogin")}
+          </StyledRouteLinkLogin>
+        </FlexContainer>
       </RegisterContent>
     </AuthContainer>
   );

@@ -36,6 +36,23 @@ export interface GetUserResponse extends ApiResponse {
   } & BaseUserInfo;
 }
 
+export interface SendResetRequest{
+  name:string;
+  rediskey:string;
+  inputCode:string;
+}
+
+export interface VerifyResetRequest{
+  name:string;
+  inputCode:string;
+}
+
+export interface ResetPasswordRequest{
+  name:string;
+  newPassword:string;
+  inputCode:string;
+}
+
 export type GetCurrentUserResponse = GenericApiResponse<CurrentUser>;
 
 class UserApi extends Api {
@@ -53,6 +70,13 @@ class UserApi extends Api {
   static markUserStatusURL = "/users/mark-status";
   static userDetailURL = (id: string) => `/users/userDetail/${id}`;
   static resetPasswordURL = `/users/reset-password`;
+  static sendRegisterMailURL =`/users/sendRegisterMail`;
+  static verifyRegisterURL =`/users/verifyRegisterCode`;
+  static getCaptchaRandomURL =`/users/captcha`;
+  static getCaptchaImageURL = (redisKey: string) => `/users/captcha/${redisKey}`;
+  static resetPasswordEmailURL = `/users/sendResetPasswordEmail`;
+  static verifyResetCodeURL =`/users/verifyResetCode`;
+  static trustPasswordURL =`/users/resetPassword`;
 
   static thirdPartyLogin(
     request: ThirdPartyAuthRequest & CommonLoginParam
@@ -117,6 +141,41 @@ class UserApi extends Api {
 
   static resetPassword(userId: string): AxiosPromise<ApiResponse> {
     return Api.post(UserApi.resetPasswordURL, { userId: userId });
+  }
+  
+  static sendRegisterMail(request: {
+    name: string;
+  }):AxiosPromise<any>{
+     return Api.post(UserApi.sendRegisterMailURL,request);
+  }
+
+  static verifyRegisterCode(request: {
+    name: string;
+    inputCode: string;
+  }):AxiosPromise<any>{
+     return Api.post(UserApi.verifyRegisterURL,request)
+  }
+
+  //resetPassword
+
+  static getCaptchaRandom(): AxiosPromise<any>{
+    return Api.get(UserApi.getCaptchaRandomURL);
+  }
+
+  static getCaptchaImage(redisKey: string): AxiosPromise<any>{
+    return Api.get(UserApi.getCaptchaImageURL(redisKey));
+  }
+
+  static sendResetPasswordEmail(request:SendResetRequest):AxiosPromise<any>{
+     return Api.post(UserApi.resetPasswordEmailURL,request)
+  }
+
+  static verifyResetCode(request:VerifyResetRequest):AxiosPromise<any>{
+    return Api.post(UserApi.verifyRegisterURL,request)
+  }
+
+  static resetPasswords(request:ResetPasswordRequest):AxiosPromise<any>{
+    return Api.post(UserApi.trustPasswordURL,request);
   }
 }
 

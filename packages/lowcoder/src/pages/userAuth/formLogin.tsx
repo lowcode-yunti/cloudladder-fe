@@ -6,7 +6,7 @@ import {
   LoginCardTitle,
   StyledRouteLink,
 } from "pages/userAuth/authComponents";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import styled from "styled-components";
 import UserApi from "api/userApi";
 import { useRedirectUrl } from "util/hooks";
@@ -15,7 +15,7 @@ import { UserConnectionSource } from "@lowcoder-ee/constants/userConstants";
 import { trans } from "i18n";
 import { AuthContext, useAuthSubmit } from "pages/userAuth/authUtils";
 import { ThirdPartyAuth } from "pages/userAuth/thirdParty/thirdPartyAuth";
-import { AUTH_REGISTER_URL } from "constants/routesURL";
+import { AUTH_REGISTER_URL,AUTH_CAPTCHA_URL } from "constants/routesURL";
 import { useLocation } from "react-router-dom";
 
 const AccountLoginWrapper = styled(FormWrapperMobile)`
@@ -27,6 +27,7 @@ const AccountLoginWrapper = styled(FormWrapperMobile)`
 export default function FormLogin() {
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false); 
   const redirectUrl = useRedirectUrl();
   const { systemConfig, inviteInfo } = useContext(AuthContext);
   const invitationId = inviteInfo?.invitationId;
@@ -47,6 +48,21 @@ export default function FormLogin() {
     redirectUrl
   );
 
+  useEffect(() => {
+    const rememberMeValue = localStorage.getItem('rememberMe');
+    if (rememberMeValue !== null) {
+      setRememberMe(JSON.parse(rememberMeValue));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (rememberMe) {
+      localStorage.setItem('rememberMe', JSON.stringify(rememberMe));
+    } else {
+      localStorage.removeItem('rememberMe');
+    }
+  }, [rememberMe]);
+
   return (
     <>
       <LoginCardTitle>{trans("userAuth.login")}</LoginCardTitle>
@@ -66,6 +82,19 @@ export default function FormLogin() {
           onChange={(value) => setPassword(value)}
           valueCheck={() => [true, ""]}
         />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <label>
+        <input
+          type="checkbox"
+          checked={rememberMe}
+          onChange={(e) => setRememberMe(e.target.checked)}
+        />
+         {trans('userAuth.rememberPassword')}
+        </label>
+        <StyledRouteLink to={{ pathname: AUTH_CAPTCHA_URL, state: location.state }}>
+            {trans("userAuth.forgetPassword")}
+        </StyledRouteLink>
+        </div>
         <ConfirmButton loading={loading} disabled={!account || !password} onClick={onSubmit}>
           {trans("userAuth.login")}
         </ConfirmButton>

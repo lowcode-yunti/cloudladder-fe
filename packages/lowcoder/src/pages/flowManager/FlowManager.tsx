@@ -28,7 +28,8 @@ export const FlowManager: FC = () => {
     <div className={classes.wrapper}>
       <iframe
         className={classes.iframe}
-        src="https://n8n.cloudladder.net.cn/"
+         // src="https://n8n.cloudladder.net.cn/"
+         src="http://localhost:5678/"
         onLoad={() => setLoading(false)}
       />
       {loading && (
