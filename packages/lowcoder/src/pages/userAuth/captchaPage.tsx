@@ -47,7 +47,9 @@ const StyledImageContainer = styled.div`
   display: flex;
   justify-content: left;
   align-items: center;
-  width: 200%; 
+  width: 100%; 
+  max-width: 100px; /* 设置最大宽度 */
+  margin-bottom: 20px; 
   margin-bottom: 60px; 
 `;
 
@@ -62,19 +64,17 @@ const NewButton = styled(ConfirmButton)`
 
 export default function CaptchaComponent() {
   const [name, setAccount] = useState('');
-  const [rediskey, setRedisKey] = useState('');
   const [inputCode, setVerificationCode] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const redirectUrl = AUTH_RESETPASSWORD_URL;
-  // const redirectUrl = '';
+  // const redirectUrl = AUTH_RESETPASSWORD_URL;
+  const redirectUrl = '';
 
   const { onSubmit, loading } = useAuthSubmit(
     () =>
       UserApi.sendResetPasswordEmail({
         name: name,
-        rediskey: rediskey,
         inputCode: inputCode,
       }),
     false,
@@ -88,20 +88,23 @@ export default function CaptchaComponent() {
 
   const fetchCaptchaImage = async () => {
     try {
-      const response = await UserApi.getCaptchaRandom(); 
-      setRedisKey(response.data);
-      const imageUrlResponse = await UserApi.getCaptchaImage(rediskey); 
-
-      if (imageUrlResponse && imageUrlResponse.data) {
-        const imageData = new Blob([imageUrlResponse.data], { type: 'image/png' });
-        const imageUrl = URL.createObjectURL(imageData);
-        setImageUrl(imageUrl);
+      const response = await UserApi.getCaptchaRandom();
+    
+  
+      console.log(response.data);
+      const imageUrlResponse = await UserApi.getCaptchaImage(response.data);
+  
+      console.log(imageUrlResponse.data);
+      if (imageUrlResponse.status === 200) {
+        setImageUrl(imageUrlResponse.data); 
+        console.log(imageUrlResponse.data); 
       }
     } catch (error) {
       console.error('Error fetching captcha image:', error);
       setErrorMessage('Failed to fetch captcha image');
     }
   };
+  
 
 
   const handleVerificationCodeChange = (value: string) => {
@@ -112,17 +115,45 @@ export default function CaptchaComponent() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await UserApi.sendResetPasswordEmail({ name: name,  inputCode: inputCode });
+  //       console.log(response,"dassadasdsdad");
+  //     if (response.data === 'Verification successful') {
+  //       alert('Verification successful! You can now proceed with registration.');
+  //       // Enable registration button here
+  //     } else {
+  //       alert('Verification failed!');
+  //     }
+  //   } catch (error) {
+  //     if (error.response && error.response.status === 500) {
+  //       alert('Verification failed!');
+  //     } else {
+  //       console.error('Verification failed!', error);
+  //     }
+  //   }
+  // };
+  const submitEmial =async()=>{
     try {
-      const response = await UserApi.sendResetPasswordEmail({ name: name, rediskey: rediskey, inputCode: inputCode });
-      console.log('Verification result:', response);
-      setSuccessMessage('Email sent successfully!'); 
+      const response = await UserApi.sendResetPasswordEmail({ name: name,  inputCode: inputCode });
+      if (response.status === 200) {
+        alert('发送邮件成功，请注意查收');
+        // Enable registration button here
+      } else {
+        alert('验证失败!');
+      }
     } catch (error) {
-      console.error('Verification error:', error);
-      setErrorMessage('Failed to send email'); 
+      if (error.response && error.response.status === 500) {
+        alert('验证失败!');
+      } else {
+        console.error('验证失败!', error);
+      }
     }
-  };
+    
+    
+    
+  }
 
   return (
     <>
@@ -133,7 +164,7 @@ export default function CaptchaComponent() {
         <StyledContentContainer>
         <LoginCardTitle>{trans("userAuth.forgetPassword")}</LoginCardTitle>
           <AccountLoginWrapper>
-            <form onSubmit={handleSubmit}>
+            <form>
               <StyledFormInput
                 className="form-input"
                 label={trans('userAuth.email')}
@@ -155,7 +186,7 @@ export default function CaptchaComponent() {
               />
               <CenteredButtonContainer>
                 <NewButton loading={loading} disabled={!name || !inputCode || inputCode.length !== 6}
-                  onClick={onSubmit}>
+                  onClick={submitEmial}>
                   {trans("userAuth.sendEmail")}
                 </NewButton>
               </CenteredButtonContainer>

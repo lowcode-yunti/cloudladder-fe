@@ -43,7 +43,7 @@ export default function VerifyComponent() {
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const handleEmailChange = (value) => {
+    const handleEmailChange = (value:string) => {
         setEmail(value);
         setIsEmailValid(checkEmailValid(value));
     };
@@ -53,16 +53,18 @@ export default function VerifyComponent() {
             try {
                 setIsSubmitting(true); 
                 const response = await UserApi.verifyResetCode({ name: name, inputCode: inputCode });
-                setSuccessMessage('Verification successful!');
-                if (response.status === 302) {
-                    window.location.href = response.headers.location;
-                    //window.location.href = AUTH_RESETPASSWORD_URL;
+                console.log(response,"sdasdad")
+                if (response.status === 200) {
+                    // window.location.href = response.headers.location;
+                    window.location.href = AUTH_RESETPASSWORD_URL+"?"+inputCode;
                 } else {
-                    setErrorMessage('Reset code verification failed');
+                    // setErrorMessage('Reset code verification failed');
+                    alert('Verification failed!');
                 }
             } catch (error) {
                 console.error('Reset code verification error:', error);
-                setErrorMessage('Verification failed!');
+                // setErrorMessage('Verification failed!');
+                alert('Verification failed!');
             } finally {
                 setIsSubmitting(false); 
             }
@@ -71,8 +73,12 @@ export default function VerifyComponent() {
         }
     };
 
-    const handleVerificationCodeChange = (value) => {
-        setVerificationCode(value);
+    const handleVerificationCodeChange = (value:string) => {
+        if (value.length === 8) {
+            setVerificationCode(value);
+          } else {
+            setVerificationCode('');
+          }
     };
 
     return (

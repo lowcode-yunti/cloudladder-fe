@@ -38,7 +38,6 @@ export interface GetUserResponse extends ApiResponse {
 
 export interface SendResetRequest{
   name:string;
-  rediskey:string;
   inputCode:string;
 }
 
@@ -171,7 +170,7 @@ class UserApi extends Api {
   }
 
   static verifyResetCode(request:VerifyResetRequest):AxiosPromise<any>{
-    return Api.post(UserApi.verifyRegisterURL,request)
+    return Api.post(UserApi.verifyResetCodeURL,request)
   }
 
   static resetPasswords(request:ResetPasswordRequest):AxiosPromise<any>{

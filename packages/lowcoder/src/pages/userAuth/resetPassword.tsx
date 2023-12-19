@@ -6,11 +6,15 @@ import { checkEmailValid, checkPhoneValid } from "util/stringUtils";
 import styled from "styled-components";
 import {
     AUTH_LOGIN_URL
+    
 } from "constants/routesURL";
+import { useLocation } from "react-router-dom";
 import { AuthContext, checkPassWithMsg, useAuthSubmit } from "pages/userAuth/authUtils";
 import {
     ConfirmButton,
+    StyledRouteLinkLogin
 } from "pages/userAuth/authComponents";
+
 
 const StyledContentContainer = styled.div`
  border-radius: 12px;
@@ -67,10 +71,11 @@ export default function ResetPasswordComponent() {
     const [errorMessage, setErrorMessage] = useState('');
     const [verificationCode, setVerificationCode] = useState('');
     const redirectUrl = AUTH_LOGIN_URL;
+    const location = useLocation();
 
     const handleResetPassword = async () => {
         
-        if (verificationCode.length !== 6) {
+        if (verificationCode.length !== 8) {
             setErrorMessage('Verification code should be 6 characters long');
             return Promise.reject('Verification code should be 6 characters long');
         }
@@ -82,9 +87,13 @@ export default function ResetPasswordComponent() {
                 inputCode: verificationCode,
             });
 
-            console.log('Password reset result:', response);
-            setSuccessMessage('Password reset successful!'); 
-            setErrorMessage(''); 
+            console.log(response)
+            if (response.status === 200) {
+                alert('密码重置成功');
+            } else {
+                alert('Verification failed!');
+            }
+            
             return Promise.resolve(response);
 
         } catch (error: any) {
@@ -128,7 +137,7 @@ export default function ResetPasswordComponent() {
                         onChange={(value, valid) => setVerificationCode(valid ? value : '')}
                         placeholder={trans('userAuth.verificationCode')}
                         checkRule={{
-                            check: (value) => value.length === 6,
+                            check: (value) => value.length === 8,
                             errorMsg: trans('userAuth.verificationCodeError'), 
                         }}
                     />
@@ -137,6 +146,9 @@ export default function ResetPasswordComponent() {
                             {trans('userAuth.resetPassword')}
                         </ConfirmButton>
                     </CenteredButtonContainer>
+                    <StyledRouteLinkLogin to={{ pathname: AUTH_LOGIN_URL, state: location.state }}>
+                     {trans("userAuth.userLogin")}
+                   </StyledRouteLinkLogin>
                     {successMessage && <div style={{ color: 'green' }}>{successMessage}</div>}
                     {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}        
                 </AccountLoginWrapper>

@@ -103,9 +103,10 @@ function UserRegister() {
     try {
       
       const response = await UserApi.sendRegisterMail({ name: account });
-
-      if (response.data === 'Email sent successfully') {
-        alert('Email sent successfully! Please check your email for the verification code.');
+      console.log(account);
+      if (response.status === 200) {
+      
+        alert("邮件发送成功，请去邮件查看您的验证码五分钟过期！");
 
       } else {
         alert('Email sent failed!');
@@ -120,14 +121,16 @@ function UserRegister() {
   };
  
 
-  const verifyCode = async () => {
+  const verifyCode = async (value:string) => {
     try {
-      const response = await UserApi.verifyRegisterCode({ name: account, inputCode: verificationCode });
+      const response = await UserApi.verifyRegisterCode({ name: account, inputCode:value });
 
-      if (response.data === 'Verification successful') {
-        alert('Verification successful! You can now proceed with registration.');
+      console.log(value);
+      if (response.status === 200) {
+        alert('验证成功，你现在可以进行注册');
         // Enable registration button here
       } else {
+        console.log(verificationCode);
         alert('Verification failed!');
       }
     } catch (error) {
@@ -140,9 +143,11 @@ function UserRegister() {
   };
 
   const handleVerificationCodeChange = (value: string) => {
+    console.log(value);
+    
     setVerificationCode(value);
-    if (value.length === 8) {
-      verifyCode();
+    if (value.length == 8) {
+      verifyCode(value);
     }
   };
 
