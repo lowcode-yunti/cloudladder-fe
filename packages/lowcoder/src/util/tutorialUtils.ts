@@ -9,8 +9,7 @@ const DatasourceTutorials: Partial<Record<DatasourceType, string>> = {
   es: trans("datasourceTutorial.es"),
   smtp: trans("datasourceTutorial.smtp"),
   clickHouse: trans("datasourceTutorial.clickHouse"),
-  googleSheets:
-    "https://docs.cloudladder.cloud/connect-your-data/apis-as-datasource/google-sheets",
+  googleSheets: "https://docs.lowcoder.cloud/connect-your-data/apis-as-datasource/google-sheets",
 };
 
 export const getDatasourceTutorial = (datasourceType: DatasourceType) => {
@@ -21,12 +20,11 @@ export const QueryTutorials = {
   js: trans("queryTutorial.js"),
   transformer: trans("queryTutorial.transformer"),
   tempState: trans("queryTutorial.tempState"),
-  dataResponder: "",
+  dataResponder: trans("queryTutorial.dataResponder"),
   es: "https://www.elastic.co/guide/en/elasticsearch/reference/current/rest-apis.html",
   redis: "https://redis.io/commands/",
   googleSheets: {
-    readData:
-      "https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/get",
+    readData: "https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/get",
     appendData:
       "https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/append",
     updateData:

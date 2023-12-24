@@ -1,11 +1,5 @@
 import { DataNode } from "antd/lib/tree";
-import {
-  CopyTextButton,
-  CustomTree,
-  labelCss,
-  PackUpIcon,
-  Search,
-} from "lowcoder-design";
+import { CopyTextButton, CustomTree, labelCss, PackUpIcon, Search } from "lowcoder-design";
 import _ from "lodash";
 import { Drawer as AntdDrawer } from "antd";
 import { CSSProperties, useEffect, useState } from "react";
@@ -153,6 +147,7 @@ export const DataSourceStructureTree = (props: {
   const dispatch = useDispatch();
   const datasourceStructure = useSelector(getDataSourceStructures);
   const datasourceTypeMap = useSelector(getDataSourceTypesMap);
+
   const originStructure = datasourceStructure[dataSourceId]?.map((item) => ({
     title: <EveryRow name={item.name} />,
     key: item.name,
@@ -173,8 +168,7 @@ export const DataSourceStructureTree = (props: {
     setExpandedKeys([originStructure?.[0]?.key]);
   }, [datasourceStructure[dataSourceId]]);
 
-  const hasStructure =
-    datasourceTypeMap[datasourceType as DatasourceType]?.hasStructureInfo;
+  const hasStructure = datasourceTypeMap[datasourceType as DatasourceType]?.hasStructureInfo;
   useEffect(() => {
     if (hasStructure) {
       dispatch(fetchDatasourceStructure({ datasourceId: dataSourceId }));
@@ -182,12 +176,7 @@ export const DataSourceStructureTree = (props: {
   }, [dataSourceId, dispatch, hasStructure, datasourceType]);
 
   if (!datasourceStructure[dataSourceId]) {
-    return (
-      <EmptyContent
-        style={{ margin: "0 8px" }}
-        text={trans("bottomPanel.noMetadata")}
-      />
-    );
+    return <EmptyContent style={{ margin: "0 8px" }} text={trans("bottomPanel.noMetadata")} />;
   }
 
   return (
@@ -214,11 +203,10 @@ export const DataSourceStructureTree = (props: {
               const newStructure = originStructure
                 .map((item) => {
                   const children = item.children?.filter(
-                    (child) =>
-                      child.key.toString().toLowerCase().indexOf(value) !== -1
+                    (child) => child.key.toString().toLowerCase().indexOf(value) !== -1
                   );
-                  return item.key.toString().toLowerCase().indexOf(value) !==
-                    -1 || !_.isEmpty(children)
+                  return item.key.toString().toLowerCase().indexOf(value) !== -1 ||
+                    !_.isEmpty(children)
                     ? {
                         ...item,
                         children: children,
@@ -260,8 +248,7 @@ export default function BottomMetaDrawer(props: BottomMetaDrawerProps) {
   const datasourceStructure = useSelector(getDataSourceStructures);
   const datasourceTypeMap = useSelector(getDataSourceTypesMap);
 
-  const hasStructure =
-    datasourceTypeMap[queryType as DatasourceType]?.hasStructureInfo;
+  const hasStructure = datasourceTypeMap[queryType as DatasourceType]?.hasStructureInfo;
   useEffect(() => {
     if (hasStructure) {
       dispatch(fetchDatasourceStructure({ datasourceId: dataSourceId }));
@@ -317,10 +304,7 @@ export default function BottomMetaDrawer(props: BottomMetaDrawerProps) {
         open={visible}
         getContainer={false}
       >
-        <DataSourceStructureTree
-          dataSourceId={dataSourceId}
-          datasourceType={queryType}
-        />
+        <DataSourceStructureTree dataSourceId={dataSourceId} datasourceType={queryType} />
       </Drawer>
     </>
   );

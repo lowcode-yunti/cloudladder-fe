@@ -45,7 +45,8 @@ export default function RightPanel(props: RightPanelProps) {
 
   return (
     <RightPanelWrapper className="cypress-right-content">
-      {aggregationApp && (
+      {((aggregationApp && uiCompType === "nav") ||
+        (uiCompType === "normal" && showPropertyPane)) && (
         <Tabs
           onChange={(key) => {
             onTabChange(key);

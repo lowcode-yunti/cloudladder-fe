@@ -2,12 +2,7 @@ import { AutocompleteDataType } from "base/codeEditor/completion/ternServer";
 import _ from "lodash";
 import { evalScript } from "lowcoder-core";
 import { checkCursorInBinding } from "../codeEditorUtils";
-import {
-  Completion,
-  CompletionContext,
-  CompletionResult,
-  EditorView,
-} from "../codeMirror";
+import { Completion, CompletionContext, CompletionResult, EditorView } from "../codeMirror";
 import { CompletionSource } from "./completion";
 
 const PRIORITY_PROPS = ["value", "selectedRow", "data", "text"];
@@ -20,10 +15,7 @@ export class ExposingCompletionSource extends CompletionSource {
     context: CompletionContext
   ): CompletionResult | Promise<CompletionResult | null> | null {
     // log.log("complete pos:", context.pos, "\nselection:", context.state);
-    if (
-      this.data === undefined ||
-      !checkCursorInBinding(context, this.isFunction)
-    ) {
+    if (this.data === undefined || !checkCursorInBinding(context, this.isFunction)) {
       return null;
     }
     const matchPath = context.matchBefore(
@@ -43,13 +35,10 @@ export class ExposingCompletionSource extends CompletionSource {
       return null;
     }
     const [currentData, offset, prefix] = info;
-    const keys = Object.keys(currentData).filter((key) =>
-      key.startsWith(prefix)
-    );
+    const keys = Object.keys(currentData).filter((key) => key.startsWith(prefix));
     const options = keys.map((key) => {
       const dataType = getDataType(currentData[key]);
-      const isBoost =
-        offset === 0 && this.boostExposingData?.hasOwnProperty(key);
+      const isBoost = offset === 0 && this.boostExposingData?.hasOwnProperty(key);
       const result: Completion = {
         type: _.lowerCase(dataType),
         label: key,
@@ -115,17 +104,11 @@ function getDataType(data: unknown): string {
   return AutocompleteDataType.OBJECT;
 }
 
-function getPreCompletions(
-  infoList: Record<string, any>,
-  keys: string[]
-): Completion[] {
-  // console.log("getPreCompletionsgetPreCompletions", infoList, keys);
+function getPreCompletions(infoList: Record<string, any>, keys: string[]): Completion[] {
   return keys
     .filter((key) => infoList[key])
     .flatMap((key) => {
-      return PRIORITY_PROPS.filter((prop) =>
-        infoList[key].hasOwnProperty(prop)
-      ).map((prop) => {
+      return PRIORITY_PROPS.filter((prop) => infoList[key].hasOwnProperty(prop)).map((prop) => {
         const dataType = getDataType(infoList[key][prop]);
         const result: Completion = {
           type: _.lowerCase(dataType),

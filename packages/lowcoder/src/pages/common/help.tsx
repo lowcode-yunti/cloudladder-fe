@@ -1,18 +1,7 @@
 import styled from "styled-components";
 import { Layers } from "constants/Layers";
-import {
-  HelpIcon,
-  LeftHelpIcon,
-  HelpGithubIcon,
-  HelpDiscordIcon,
-} from "lowcoder-design";
-import {
-  VideoIcon,
-  ChatIcon,
-  DocIcon,
-  TutorialIcon,
-  ShortcutIcon,
-} from "assets/icons";
+import { HelpIcon, LeftHelpIcon, HelpGithubIcon, HelpDiscordIcon } from "lowcoder-design";
+import { VideoIcon, ChatIcon, DocIcon, TutorialIcon, ShortcutIcon } from "assets/icons";
 import TutorialVideoPic from "assets/images/tutorialVideoThumbnail.png";
 import { Dropdown, Popover, Tooltip } from "antd";
 import {
@@ -253,12 +242,7 @@ export function HelpDropdown(props: HelpDropdownProps) {
               applicationType: AppTypeEnum.Application,
               orgId: user.currentOrgId,
               onSuccess: (app) => {
-                history.push(
-                  buildAppRouteWithState(
-                    app.applicationInfoView.applicationId,
-                    true
-                  )
-                );
+                history.push(buildAppRouteWithState(app.applicationInfoView.applicationId, true));
                 setTimeout(() => history.go(0));
               },
             })
@@ -300,18 +284,18 @@ export function HelpDropdown(props: HelpDropdownProps) {
               label: <WatchVideoItem />,
             }
           : null,
-        // customerService
-        //   ? {
-        //       key: "customerService",
-        //       label: (
-        //         <ItemWrapper>
-        //           {customerService(() => setShowHelp(true))}
-        //           <ChatIcon />
-        //           <span>{trans("help.chat")}</span>
-        //         </ItemWrapper>
-        //       ),
-        //     }
-        //   : null,
+        customerService
+          ? {
+              key: "customerService",
+              label: (
+                <ItemWrapper>
+                  {customerService(() => setShowHelp(true))}
+                  <ChatIcon />
+                  <span>{trans("help.chat")}</span>
+                </ItemWrapper>
+              ),
+            }
+          : null,
         {
           key: "docs",
           label: (
@@ -321,28 +305,28 @@ export function HelpDropdown(props: HelpDropdownProps) {
             </ItemWrapper>
           ),
         },
-        // issueUrl
-        //   ? {
-        //       key: "issue",
-        //       label: (
-        //         <ItemWrapper>
-        //           <HelpGithubIcon />
-        //           <span>{trans("help.submitIssue")}</span>
-        //         </ItemWrapper>
-        //       ),
-        //     }
-        //   : null,
-        // discordUrl
-        //   ? {
-        //       key: "discord",
-        //       label: (
-        //         <ItemWrapper>
-        //           <HelpDiscordIcon />
-        //           <span>{trans("help.chat")}</span>
-        //         </ItemWrapper>
-        //       ),
-        //     }
-        //   : null,
+        issueUrl
+          ? {
+              key: "issue",
+              label: (
+                <ItemWrapper>
+                  <HelpGithubIcon />
+                  <span>{trans("help.submitIssue")}</span>
+                </ItemWrapper>
+              ),
+            }
+          : null,
+        discordUrl
+          ? {
+              key: "discord",
+              label: (
+                <ItemWrapper>
+                  <HelpDiscordIcon />
+                  <span>{trans("help.chat")}</span>
+                </ItemWrapper>
+              ),
+            }
+          : null,
         {
           key: "editorTutorial",
           label: (
@@ -397,9 +381,7 @@ export function HelpDropdown(props: HelpDropdownProps) {
                       {trans("help.versionWithColon")}
                       {version}-{REACT_APP_COMMIT_ID}
                     </div>
-                    {REACT_APP_BUILD_ID && (
-                      <span>Build: {REACT_APP_BUILD_ID}</span>
-                    )}
+                    {REACT_APP_BUILD_ID && <span>Build: {REACT_APP_BUILD_ID}</span>}
                   </>
                 }
                 placement="topLeft"

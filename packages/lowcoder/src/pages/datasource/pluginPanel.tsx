@@ -24,19 +24,19 @@ export const DataSourceButton = styled(AntdButton)`
     padding: 12px 10px;
     display: flex;
     align-items: center;
-
+  
     & > span {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-
+  
     &:hover {
       color: #333333;
       border-color: #d7d9e0;
       background-color: #f5f5f6;
     }
-
+  
     &:focus {
       color: #333333;
       border-color: #d7d9e0;
@@ -66,43 +66,17 @@ const SectionBody = styled.div`
   gap: 8px;
 `;
 
-const REMOVED_DATASOURCE_IDS = [
-  "googleSheets",
-  "woocommerce",
-  "googleCloudStorage",
-  "front",
-  "oneSignal",
-  "sendGrid",
-  "shopify",
-  "slack",
-  "supabase",
-  "cloudinary",
-  "notion",
-  "datadog",
-  "twilio",
-  "gitlab",
-  "fauna",
-  "did",
-];
-
-export const PluginPanel = (props: {
-  onSelect: (t: DataSourceTypeInfo) => void;
-}) => {
+export const PluginPanel = (props: { onSelect: (t: DataSourceTypeInfo) => void }) => {
   const datasourceTypes = useSelector(getDataSourceTypes);
   const currentPage = useCurrentPage();
-  const apiList =
-    currentPage === "queryLibrary" ? apiPluginsForQueryLibrary : apiPlugins;
+  const apiList = currentPage === "queryLibrary" ? apiPluginsForQueryLibrary : apiPlugins;
   return (
     <PanelWrapper>
       <SectionWrapper>
         <SectionLabel>{trans("query.database")}</SectionLabel>
         <SectionBody>
           {datasourceTypes
-            .filter(
-              (t) =>
-                databasePlugins.includes(t.id) ||
-                t.definition?.category === "database"
-            )
+            .filter((t) => databasePlugins.includes(t.id) || t.definition?.category === "database")
             .map((t) => {
               return (
                 <DataSourceButton key={t.id} onClick={() => props.onSelect(t)}>
@@ -117,11 +91,7 @@ export const PluginPanel = (props: {
         <SectionLabel>APIs</SectionLabel>
         <SectionBody>
           {datasourceTypes
-            .filter(
-              (t) =>
-                (apiList.includes(t.id) || t.definition?.category === "api") &&
-                !REMOVED_DATASOURCE_IDS.includes(t.id)
-            )
+            .filter((t) => apiList.includes(t.id) || t.definition?.category === "api")
             .map((t) => (
               <DataSourceButton key={t.id} onClick={() => props.onSelect(t)}>
                 {t.id && getBottomResIcon(t.id, "large", t.definition?.icon)}

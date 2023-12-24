@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useMemo } from "react";
 import {
   AuthContainer,
   ConfirmButton,
@@ -8,7 +8,7 @@ import {
   TermsAndPrivacyInfo,
 } from "pages/userAuth/authComponents";
 import { FormInput, PasswordInput } from "lowcoder-design";
-import { AUTH_LOGIN_URL } from "constants/routesURL";
+import { AUTH_LOGIN_URL, ORG_AUTH_LOGIN_URL } from "constants/routesURL";
 import UserApi from "api/userApi";
 import { useRedirectUrl } from "util/hooks";
 import { checkEmailValid } from "util/stringUtils";
@@ -18,6 +18,8 @@ import { useLocation } from "react-router-dom";
 import { UserConnectionSource } from "@lowcoder-ee/constants/userConstants";
 import { trans } from "i18n";
 import { AuthContext, checkPassWithMsg, useAuthSubmit } from "pages/userAuth/authUtils";
+import { ThirdPartyAuth } from "pages/userAuth/thirdParty/thirdPartyAuth";
+import { useParams } from "react-router-dom";
 
 const StyledFormInput = styled(FormInput)`
   margin-bottom: 16px;
@@ -50,17 +52,7 @@ const StyledPasswordInput = styled(PasswordInput)`
 const RegisterContent = styled(FormWrapperMobile)`
   display: flex;
   flex-direction: column;
-
-  button {
-    margin: 20px 0 16px 0;
-  }
-`;
-
-const TermsAndPrivacyInfoWrapper = styled.div`
-  margin-bottom: 80px;
-  @media screen and (max-width: 640px) {
-    margin: 10px 0 64px 0;
-  }
+  margin-bottom: 106px;
 `;
 
 const FlexContainer = styled.div`
@@ -77,20 +69,33 @@ function UserRegister() {
   const [verificationCode, setVerificationCode] = useState(""); //code
   const redirectUrl = useRedirectUrl();
   const location = useLocation();
-  const { systemConfig, inviteInfo } = useContext(AuthContext);
-  const authId = systemConfig.form.id;
+  const { systemConfig, inviteInfo, fetchUserAfterAuthSuccess } = useContext(AuthContext);
+  const invitationId = inviteInfo?.invitationId;
+
+  const orgId = useParams<any>().orgId;
+  const organizationId = useMemo(() => {
+    if(inviteInfo?.invitedOrganizationId) {
+      return inviteInfo?.invitedOrganizationId;
+    }
+    return orgId;
+  }, [ inviteInfo, orgId ])
+
+  const authId = systemConfig?.form.id;
+
   const { loading, onSubmit } = useAuthSubmit(
     () =>
       UserApi.formLogin({
         register: true,
         loginId: account,
         password: password,
-        invitationId: inviteInfo?.invitationId,
+        invitationId,
         source: UserConnectionSource.email,
+        orgId: organizationId,
         authId,
       }),
     false,
-    redirectUrl
+    redirectUrl,
+    fetchUserAfterAuthSuccess,
   );
 
   const sendRegisterButton = async () => {
@@ -101,11 +106,11 @@ function UserRegister() {
 
 
     try {
-      
+
       const response = await UserApi.sendRegisterMail({ name: account });
       console.log(account);
       if (response.status === 200) {
-      
+
         alert("邮件发送成功，请去邮件查看您的验证码五分钟过期！");
 
       } else {
@@ -119,7 +124,7 @@ function UserRegister() {
       }
     }
   };
- 
+
 
   const verifyCode = async (value:string) => {
     try {
@@ -144,7 +149,7 @@ function UserRegister() {
 
   const handleVerificationCodeChange = (value: string) => {
     console.log(value);
-    
+
     setVerificationCode(value);
     if (value.length == 8) {
       verifyCode(value);
@@ -156,8 +161,15 @@ function UserRegister() {
     return null;
   }
 
+  const registerHeading = trans("userAuth.register") // REACT_APP_LOWCODER_CUSTOM_AUTH_WELCOME_TEXT !== "" ? REACT_APP_LOWCODER_CUSTOM_AUTH_WELCOME_TEXT : trans("userAuth.register")
+  const registerSubHeading = '' // REACT_APP_LOWCODER_CUSTOM_AUTH_WELCOME_TEXT !== "" ? trans("userAuth.poweredByLowcoder") : ''
+
   return (
-    <AuthContainer title={trans("userAuth.register")} type="large">
+    <AuthContainer
+      heading={registerHeading}
+      subHeading={registerSubHeading}
+      type="large"
+    >
       <RegisterContent>
         <LoginCardTitle>{trans("userAuth.registerByEmail")}</LoginCardTitle>
         <StyledFormInput
@@ -189,16 +201,23 @@ function UserRegister() {
         >
           {trans("userAuth.register")}
         </ConfirmButton>
-        <TermsAndPrivacyInfoWrapper>
-          <TermsAndPrivacyInfo onCheckChange={(e) => setSubmitBtnDisable(!e.target.checked)} />
-        </TermsAndPrivacyInfoWrapper>
-        <FlexContainer>
-          <StyledButtonLeft onClick={sendRegisterButton}>{trans('userAuth.sendEmail')}</StyledButtonLeft>
-          <StyledRouteLinkLogin to={{ pathname: AUTH_LOGIN_URL, state: location.state }}>
-            {trans("userAuth.userLogin")}
-          </StyledRouteLinkLogin>
-        </FlexContainer>
+        <TermsAndPrivacyInfo onCheckChange={(e) => setSubmitBtnDisable(!e.target.checked)} />
+        {organizationId && (
+          <ThirdPartyAuth
+            invitationId={invitationId}
+            invitedOrganizationId={organizationId}
+            authGoal="register"
+          />
+        )}
       </RegisterContent>
+      <StyledRouteLinkLogin to={{
+        pathname: orgId
+          ? ORG_AUTH_LOGIN_URL.replace(':orgId', orgId)
+          : AUTH_LOGIN_URL,
+        state: location.state
+      }}>
+        {trans("userAuth.userLogin")}
+      </StyledRouteLinkLogin>
     </AuthContainer>
   );
 }
