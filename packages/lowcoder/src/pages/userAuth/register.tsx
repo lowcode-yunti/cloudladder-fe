@@ -18,30 +18,38 @@ import { useLocation } from "react-router-dom";
 import { UserConnectionSource } from "@lowcoder-ee/constants/userConstants";
 import { trans } from "i18n";
 import { AuthContext, checkPassWithMsg, useAuthSubmit } from "pages/userAuth/authUtils";
-
+import { MailOutlined,EditOutlined,LockOutlined } from '@ant-design/icons'
+import { messageInstance } from "lowcoder-design";
+import { Input} from "antd";
 const StyledFormInput = styled(FormInput)`
   margin-bottom: 16px;
 `;
 
 const StyledButtonLeft = styled.div`
-margin-bottom: 8px;
-display: flex;
-align-items: center;
-margin-right: auto; 
+/* margin-bottom: 8px; */
+/* display: flex; */
+/* align-items: center; */
+/* margin-right: auto;  */
+width:100px;
+background-color: rgb(73, 101, 242);
+border-radius: 6px;
+border:1px solid rgb(73, 101, 242);
+text-align: center;
 
-font-size: 16px;
-color: #4965f2;
-line-height: 16px;
+font-size: 14px;
+color: rgb(255, 255, 255);
+line-height: 30px;
 cursor: pointer; 
 
 :hover {
-  color: #315efb;
+  /* color: #315efb; */
 }
 
-@media screen and (max-width: 640px) {
+/* @media screen and (max-width: 640px) {
   margin-bottom: 0;
-}
+} */
 `;
+
 
 const StyledPasswordInput = styled(PasswordInput)`
   margin-bottom: 16px;
@@ -69,6 +77,13 @@ const FlexContainer = styled.div`
   justify-content: space-between;
   margin-top: -80px; 
 `;
+const NewButton=styled(ConfirmButton)`
+  margin: 0px !important;
+`
+const GetCodeInput=styled(Input)`
+width: 200px;
+margin-bottom: 16px;
+`
 
 function UserRegister() {
   const [submitBtnDisable, setSubmitBtnDisable] = useState(false);
@@ -95,7 +110,8 @@ function UserRegister() {
 
   const sendRegisterButton = async () => {
     if (!checkEmailValid(account)) {
-      alert('Please enter a valid email address!');
+      // alert('请输入有效的电子邮箱!');
+      messageInstance.warning('请输入有效的电子邮箱!')
       return;
     }
 
@@ -105,18 +121,18 @@ function UserRegister() {
       const response = await UserApi.sendRegisterMail({ name: account });
       console.log(account);
       if (response.status === 200) {
-      
-        alert("邮件发送成功，请去邮件查看您的验证码五分钟过期！");
+        messageInstance.success('邮件发送成功，验证码有效期五分钟')
+        // alert("邮件发送成功，请去邮件查看您的验证码五分钟过期！");
 
       } else {
-        alert('Email sent failed!');
+        messageInstance.error('邮件发送失败')
+        // alert('Email sent failed!');
       }
     } catch (error) {
       if (error.response && error.response.status === 500) {
+        messageInstance.error('邮件发送失败，请检查网络')
         alert('Email sent failed!');
-      } else {
-        console.error('Email sent failed!', error);
-      }
+      } 
     }
   };
  
@@ -125,33 +141,30 @@ function UserRegister() {
     try {
       const response = await UserApi.verifyRegisterCode({ name: account, inputCode:value });
 
-      console.log(value);
       if (response.status === 200) {
-        alert('验证成功，你现在可以进行注册');
+        messageInstance.success('验证成功')
+        // alert('验证成功，你现在可以进行注册');
         // Enable registration button here
       } else {
-        console.log(verificationCode);
-        alert('Verification failed!');
+        messageInstance.error('验证失败')
+        // alert('Verification failed!');
       }
-    } catch (error) {
+    } catch (error:any) {
       if (error.response && error.response.status === 500) {
-        alert('Verification failed!');
+        messageInstance.error('验证失败，请检查网络')
+        // alert('Verification failed!');
       } else {
-        console.error('Verification failed!', error);
+        // console.error('Verification failed!', error);
       }
     }
   };
-
-  const handleVerificationCodeChange = (value: string) => {
-    console.log(value);
-    
+  const handleVerificationCodeChange = (e:any) => {
+    const value=e.target.value
     setVerificationCode(value);
     if (value.length == 8) {
       verifyCode(value);
     }
   };
-
-
   if (!systemConfig || !systemConfig.form.enableRegister) {
     return null;
   }
@@ -161,6 +174,7 @@ function UserRegister() {
       <RegisterContent>
         <LoginCardTitle>{trans("userAuth.registerByEmail")}</LoginCardTitle>
         <StyledFormInput
+          prefix={<MailOutlined />}
           className="form-input"
           label={trans("userAuth.email")}
           onChange={(value, valid) => setAccount(valid ? value : "")}
@@ -170,34 +184,43 @@ function UserRegister() {
             errorMsg: trans("userAuth.inputValidEmail"),
           }}
         />
-        <StyledFormInput
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline'}}>
+        <GetCodeInput
+        prefix={<EditOutlined />}
           className="form-input"
           label={trans('userAuth.verificationCode')}
           onChange={handleVerificationCodeChange}
           placeholder={trans('userAuth.enterEmailVerificationCode')}
         />
+        <StyledButtonLeft onClick={sendRegisterButton}>{trans('userAuth.sendEmail')}</StyledButtonLeft>
+        </div>
+        
         <StyledPasswordInput
+        prefix={<LockOutlined />}
           className="form-input"
           valueCheck={checkPassWithMsg}
           onChange={(value, valid) => setPassword(valid ? value : "")}
           doubleCheck
         />
-        <ConfirmButton
+        <div style={{display:'flex'}}>
+        {/* <StyledButtonLeft onClick={sendRegisterButton}>{trans('userAuth.sendEmail')}</StyledButtonLeft> */}
+         <StyledRouteLinkLogin to={{ pathname: AUTH_LOGIN_URL, state: location.state }}>
+         {trans("userAuth.userLogin")}
+          </StyledRouteLinkLogin>
+        </div>
+        
+        
+        <NewButton
           disabled={!account || !verificationCode || !password || submitBtnDisable}
           onClick={onSubmit}
           loading={loading}
         >
           {trans("userAuth.register")}
-        </ConfirmButton>
-        <TermsAndPrivacyInfoWrapper>
+        </NewButton>
+        {/* <TermsAndPrivacyInfoWrapper>
           <TermsAndPrivacyInfo onCheckChange={(e) => setSubmitBtnDisable(!e.target.checked)} />
-        </TermsAndPrivacyInfoWrapper>
-        <FlexContainer>
-          <StyledButtonLeft onClick={sendRegisterButton}>{trans('userAuth.sendEmail')}</StyledButtonLeft>
-          <StyledRouteLinkLogin to={{ pathname: AUTH_LOGIN_URL, state: location.state }}>
-            {trans("userAuth.userLogin")}
-          </StyledRouteLinkLogin>
-        </FlexContainer>
+        </TermsAndPrivacyInfoWrapper> */}
+        {/* <FlexContainer></FlexContainer> */}
       </RegisterContent>
     </AuthContainer>
   );

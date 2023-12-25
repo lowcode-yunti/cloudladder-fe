@@ -1,5 +1,6 @@
-import { Input as AntdInput, InputRef } from "antd";
+import { Input as AntdInput, InputRef, Input, Space } from "antd";
 import { ReactComponent as MustFillStar } from "icons/icon-must-fill-star.svg";
+import { LockOutlined, UserOutlined, MailOutlined } from '@ant-design/icons'
 import { trans } from "i18n/design";
 import { CSSProperties, Ref, useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
@@ -8,28 +9,27 @@ import { CustomSelect } from "./customSelect";
 import { CommonErrorLabel, CommonTextLabel } from "./Label";
 
 const TacoInput = styled(AntdInput)`
-  background: #ffffff;
+   /* background: #ffffff;
   border: 1px solid #d7d9e0;
   border-radius: 4px;
-
-  font-size: 13px;
+  font-size: 13px; 
   color: #333333;
-  line-height: 13px;
-  height: 32px;
-
-  :hover {
+  line-height: 13px; 
+ height: 32px; */
+  width: 320px;
+  /* :hover {
     border: 1px solid #8b8fa3;
-  }
+  } */
 
-  :focus {
+  /* :focus {
     border: 1px solid #3377ff;
-  }
+  } */
 
-  ::placeholder {
+  /* ::placeholder {
     font-size: 13px;
     color: #b8b9bf;
     line-height: 13px;
-  }
+  }  */
 `;
 
 const BlurInputLabel = styled.div`
@@ -42,29 +42,33 @@ const BlurInputLabel = styled.div`
 
   margin-bottom: 8px;
 `;
-
+//登录、注册等页面input样式
 const formInputCss = css`
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 
   input {
-    border-radius: 8px;
+    /* width: 320px; */
+    /* height: 32px; */
+    /* border-radius: 8px;
     color: #333333;
 
     font-size: 16px;
     line-height: 16px;
-    height: 48px;
+    */
   }
 
-  input::placeholder {
+  /* input::placeholder {
     color: #b8b9bf;
 
     font-size: 16px;
     line-height: 16px;
-  }
+  } */
 `;
 
 const FormInputFiled = styled.div`
   ${formInputCss};
+ 
+  
 `;
 
 const OtpFormInputFiled = styled.div`
@@ -79,7 +83,8 @@ const OtpFormInputFiled = styled.div`
 const InputInfoWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  /* margin-bottom: 8px; */
+  
 
   > * {
     margin-right: 5px;
@@ -323,6 +328,9 @@ function PhoneNumberInput(props: {
 }
 
 const FormInput = (props: {
+  disabled?:boolean;
+  Value?:any;
+  prefix?: any;
   mustFill?: boolean;
   label: string;
   placeholder?: string;
@@ -336,20 +344,23 @@ const FormInput = (props: {
   inputRef?: Ref<InputRef>;
   msg?: string;
 }) => {
-  const { mustFill, checkRule, label, placeholder, onChange, formName, className, inputRef } =
+  const { disabled, Value, prefix, mustFill, checkRule, label, placeholder, onChange, formName, className, inputRef } =
     props;
   const [valueValid, setValueValid] = useState(true);
   return (
     <FormInputFiled className={className}>
       <InputLabel
         mustFill={mustFill}
-        label={label}
+        // label={label}
         errorMsg={valueValid ? "" : checkRule?.errorMsg}
       />
       <TacoInput
+        disabled={disabled}
+        value={Value}
         ref={inputRef}
         name={formName}
         placeholder={placeholder}
+        prefix={prefix}
         onChange={(e) => {
           let valid = true;
           if (checkRule) {
@@ -367,6 +378,7 @@ const PasswordInput = (props: {
   onChange: (value: string, valid: boolean) => void;
   valueCheck?: (value: string) => readonly [boolean, string];
   doubleCheck?: boolean;
+  prefix?: any;
   className?: string;
   mustFill?: boolean;
   passInputConf?: {
@@ -382,18 +394,20 @@ const PasswordInput = (props: {
   const confirmPassRef = useRef<InputRef>(null);
   const [passwordErrorMsg, setPasswordErrorMsg] = useState("");
   const [confirmErrorMsg, setConfirmErrorMsg] = useState("");
-  const { className, mustFill, doubleCheck, onChange, valueCheck, passInputConf, confirmPassConf } =
+  const { prefix, className, mustFill, doubleCheck, onChange, valueCheck, passInputConf, confirmPassConf } =
     props;
   const checkPassword = valueCheck ? valueCheck : (value: string) => [true, ""] as const;
   return (
     <>
       <FormInputFiled className={className}>
+
         <InputLabel
           mustFill={mustFill}
-          label={passInputConf?.label ? passInputConf?.label : trans("passwordInput.label")}
+          // label={passInputConf?.label ? passInputConf?.label : trans("passwordInput.label")}
           errorMsg={passwordErrorMsg}
         />
         <TacoInput
+          prefix={prefix}
           ref={passRef}
           type="password"
           placeholder={
@@ -419,18 +433,21 @@ const PasswordInput = (props: {
           }}
         />
       </FormInputFiled>
+      {/* 再次确认密码部分 */}
       {doubleCheck && (
         <FormInputFiled className={className}>
           <InputLabel
             mustFill={mustFill}
-            label={
-              confirmPassConf?.label
-                ? confirmPassConf?.label
-                : trans("passwordInput.confirmPasswordLabel")
-            }
+
+            // label={
+            //   confirmPassConf?.label
+            //     ? confirmPassConf?.label
+            //     : trans("passwordInput.confirmPasswordLabel")
+            // }
             errorMsg={confirmErrorMsg}
           />
           <TacoInput
+            prefix={<LockOutlined />}
             ref={confirmPassRef}
             type="password"
             placeholder={

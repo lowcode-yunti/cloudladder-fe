@@ -25,7 +25,7 @@ import { timestampToHumanReadable } from "../../../util/dateTimeUtils";
 import { usePermissionMenuItems } from "@lowcoder-ee/pages/setting/permission/permissionMenuItems";
 import { OrgGroup } from "constants/orgConstants";
 import { messageInstance } from "lowcoder-design";
-
+import styled from "styled-components";
 const NEW_GROUP_PREFIX = trans("memberSettings.newGroupPrefix");
 
 type DataItemInfo = {
@@ -37,7 +37,11 @@ type DataItemInfo = {
   rename: boolean;
   group?: OrgGroup;
 };
-
+const CreateGroupingBtn=styled(CreateButton)`
+  &&&{
+    width: 100px;
+  }
+`
 export default function PermissionSetting() {
   const user = useSelector(getUser);
   const orgId = user.currentOrgId;
@@ -120,14 +124,14 @@ export default function PermissionSetting() {
       <Level1SettingPageTitleWithBtn>
         {trans("settings.member")}
         {currentOrgAdmin(user) && (
-          <CreateButton
+          <CreateGroupingBtn
             loading={groupCreating}
             buttonType={"primary"}
             icon={<AddIcon />}
             onClick={() => handleGroupCreate()}
           >
             {trans("memberSettings.createGroup")}
-          </CreateButton>
+          </CreateGroupingBtn>
         )}
       </Level1SettingPageTitleWithBtn>
       <div>

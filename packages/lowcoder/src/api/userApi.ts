@@ -49,7 +49,7 @@ export interface VerifyResetRequest{
 export interface ResetPasswordRequest{
   name:string;
   newPassword:string;
-  inputCode:string;
+  // inputCode:string;
 }
 
 export type GetCurrentUserResponse = GenericApiResponse<CurrentUser>;

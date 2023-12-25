@@ -7,7 +7,8 @@ const HeaderWrapper = styled.header<IHeaderProps>`
   display: flex;
   width: 100%;
   height: ${TopHeaderHeight};
-  background-color: #2c2c2c;
+  /* background-color: #2c2c2c; */
+  background-color: #001529;
   /* filter: drop-shadow(0px 1px 0px #ebebeb); */
   padding: ${(props) => (props.isEditViewPreview ? "8px 24px 8px 8px" : "8px 24px")};
   justify-content: space-between;
@@ -32,6 +33,7 @@ const HeaderMiddle = styled.div`
 const HeaderEnd = styled.div`
   display: flex;
   align-items: center;
+  
 `;
 
 export interface IHeaderProps {

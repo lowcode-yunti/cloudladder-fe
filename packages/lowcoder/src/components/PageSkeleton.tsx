@@ -79,6 +79,7 @@ export default function PageSkeleton(props: IProps) {
   );
 
   return (
+   
     <Layout>
       {!hideHeader && isHeaderReady && (
         <Header

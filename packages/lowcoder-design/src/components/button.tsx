@@ -147,6 +147,8 @@ const StyledAntdButton = styled(Button)<{ $buttonType: TacoButtonType; $loading:
   justify-content: center;
   text-align: center;
   line-height: 13px;
+  width: 320px;
+  height: 32px;
   font-size: 13px;
   // border-radius: 4px;
 

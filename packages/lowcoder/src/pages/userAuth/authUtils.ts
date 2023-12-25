@@ -45,11 +45,15 @@ export function useAuthSubmit(
   return {
     loading: loading,
     onSubmit: () => {
+      
       setLoading(true);
       requestFunc()
         .then((resp) => authRespValidate(resp, infoCompleteCheck, redirectUrl))
         .catch((e) => {
-          messageInstance.error(e.message);
+          //判断后端有没有返回提示信息没有，有的话就提示
+          if(e.message){
+            messageInstance.error(e.message);
+          }
         })
         .finally(() => setLoading(false));
     },
@@ -68,6 +72,8 @@ export function authRespValidate(
   infoCompleteCheck: boolean,
   redirectUrl: string | null
 ) {
+
+  
   let replaceUrl = redirectUrl || BASE_URL;
   if (infoCompleteCheck) {
     // need complete info

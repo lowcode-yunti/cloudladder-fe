@@ -74,6 +74,7 @@ export const apiRequestInterceptor = (config: AxiosRequestConfig): AxiosRequestC
 });
 
 export const apiSuccessResponseInterceptor = (response: AxiosResponse): AxiosResponse => {
+
   if (response?.config?.url?.match(executeActionRegex)) {
     return makeExecuteActionResponse(response);
   }
@@ -193,6 +194,8 @@ export function validateResponse(response: AxiosResponse<ApiResponse>): true | n
 }
 
 export function doValidResponse(response: AxiosResponse<ApiResponse>) {
+  // console.log(222);
+  
   if (!response) {
     throw Error(getErrorMessage(0));
   }

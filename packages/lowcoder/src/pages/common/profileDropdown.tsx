@@ -26,6 +26,27 @@ import { trans } from "i18n";
 import { showSwitchOrg } from "@lowcoder-ee/pages/common/customerService";
 import { checkIsMobile } from "util/commonUtils";
 import { selectSystemConfig } from "redux/selectors/configSelectors";
+import InviteDialog from "../common/inviteDialog";
+import {InviteUserIcon} from "lowcoder-design";
+const InviteUser = styled.div`
+  /* position: absolute;
+  display: flex;
+  align-items: center;
+  left: 10px;
+  top: calc(100vh - 60px);
+  padding: 12px 26px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 219px;
+
+  :hover {
+    color: #315efb;
+
+    svg g g {
+      stroke: #315efb;
+    }
+  } */
+`;
 
 const ProfileWrapper = styled.div`
   display: flex;
@@ -215,7 +236,11 @@ export default function ProfileDropdown(props: DropDownProps) {
           )}
         </StyledDropdownSubMenu>
       )}
+      <Menu.Item key="inviteUser">
+      <InviteDialog trigger={<InviteUser>{trans("home.inviteUser")}</InviteUser>} style={{ marginLeft: "auto" }}/>
+      </Menu.Item>
       <Menu.Item key="logout">{trans("profile.logout")}</Menu.Item>
+      
     </DropdownMenu>
   );
   return (
