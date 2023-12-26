@@ -11,8 +11,8 @@ const Icon = styled.div`
 
 const Btn = styled(TacoButton)`
   &&& {
-
     height: 13px;
+    width: 100px;
     padding: 0;
     color: #4965f2;
     border: none;

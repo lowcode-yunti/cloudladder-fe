@@ -355,7 +355,7 @@ function EditorView(props: EditorViewProps) {
       >
         <Body>
           <SiderWrapper>
-            <Sider width={40}>
+            <Sider width={45}>
               <Menu
                 theme="dark"
                 mode="inline"
