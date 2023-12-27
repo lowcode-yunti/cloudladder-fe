@@ -136,7 +136,7 @@ function Login() {
 
   return (
     <AuthContainer
-      heading={loginHeading}
+      // heading={loginHeading}
       subHeading={loginSubHeading}
     >
       <FormLogin organizationId={organizationId} />

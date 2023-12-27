@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo } from "react";
+import React, { useContext, useState, useMemo,useEffect } from "react";
 import {
   AuthContainer,
   ConfirmButton,
@@ -27,24 +27,29 @@ const StyledFormInput = styled(FormInput)`
   margin-bottom: 16px;
 `;
 
-const StyledButtonLeft = styled.div`
-/* margin-bottom: 8px;
-display: flex;
-align-items: center;
-margin-right: auto;  */
+const StyledButtonLeft = styled(ConfirmButton)`
+/* margin-bottom: 8px; */
+/* display: flex; */
+/* align-items: center; */
+/* margin-right: auto;  */
+width:100px;
+background-color: rgb(73, 101, 242);
+border-radius: 6px;
+border:1px solid rgb(73, 101, 242);
+text-align: center;
 
-font-size: 16px;
-color: #4965f2;
-line-height: 16px;
+font-size: 14px;
+color: rgb(255, 255, 255);
+line-height: 30px;
 cursor: pointer; 
 
 :hover {
   /* color: #315efb; */
 }
 
-@media screen and (max-width: 640px) {
+/* @media screen and (max-width: 640px) {
   margin-bottom: 0;
-}
+} */
 `;
 
 const StyledPasswordInput = styled(PasswordInput)`
@@ -61,7 +66,7 @@ const TermsAndPrivacyInfoWrapper = styled.div`
 const RegisterContent = styled(FormWrapperMobile)`
   display: flex;
   flex-direction: column;
-  margin-bottom: 106px;
+  /* margin-bottom: 106px; */
 `;
 
 const FlexContainer = styled.div`
@@ -82,6 +87,7 @@ function UserRegister() {
   const [submitBtnDisable, setSubmitBtnDisable] = useState(false);
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
+  const [isactivity,setaCtivity]=useState(false)
   const [verificationCode, setVerificationCode] = useState(""); //code
   const redirectUrl = useRedirectUrl();
   const location = useLocation();
@@ -112,20 +118,24 @@ function UserRegister() {
     redirectUrl,
     fetchUserAfterAuthSuccess,
   );
-
+  
   const sendRegisterButton = async () => {
     if (!checkEmailValid(account)) {
-      alert('Please enter a valid email address!');
+      messageInstance.error('请输入合法的邮箱')
       return;
     }
-
-
     try {
 
       const response = await UserApi.sendRegisterMail({ name: account });
-      console.log(account);
+     
       if (response.status === 200) {
         messageInstance.success('邮件发送成功，验证码有效期五分钟')
+       let timer=setTimeout(()=>{
+          setaCtivity(false)
+          console.log('注册里的定时器');
+          
+        },60000)
+        setaCtivity(true)
         // alert("邮件发送成功，请去邮件查看您的验证码五分钟过期！");
 
       } else {
@@ -167,9 +177,8 @@ function UserRegister() {
     }
   };
 
-  const handleVerificationCodeChange = (value: string) => {
-    console.log(value);
-
+  const handleVerificationCodeChange = (e: string) => {
+    const value=e.target.value
     setVerificationCode(value);
     if (value.length == 8) {
       verifyCode(value);
@@ -184,13 +193,14 @@ function UserRegister() {
 
   return (
     <AuthContainer
-      heading={registerHeading}
+      // heading={registerHeading}
       subHeading={registerSubHeading}
       type="large"
     >
       <RegisterContent>
         <LoginCardTitle>{trans("userAuth.registerByEmail")}</LoginCardTitle>
         <StyledFormInput
+         prefix={<MailOutlined />}
           className="form-input"
           label={trans("userAuth.email")}
           onChange={(value, valid) => setAccount(valid ? value : "")}
@@ -200,19 +210,33 @@ function UserRegister() {
             errorMsg: trans("userAuth.inputValidEmail"),
           }}
         />
-        <StyledFormInput
-          className="form-input"
-          label={trans('userAuth.verificationCode')}
-          onChange={handleVerificationCodeChange}
-          placeholder={trans('userAuth.enterEmailVerificationCode')}
-        />
+
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline'}}>
+          <GetCodeInput
+            prefix={<EditOutlined />}
+            className="form-input"
+            label={trans('userAuth.verificationCode')}
+            onChange={handleVerificationCodeChange}
+            placeholder={trans('userAuth.enterEmailVerificationCode')}
+           />
+               <StyledButtonLeft disabled={isactivity} onClick={sendRegisterButton}>{trans('userAuth.sendEmail')}</StyledButtonLeft>
+        </div>
+        
         <StyledPasswordInput
+        prefix={<LockOutlined />}
           className="form-input"
           valueCheck={checkPassWithMsg}
           onChange={(value, valid) => setPassword(valid ? value : "")}
           doubleCheck
         />
-       
+       <StyledRouteLinkLogin to={{
+        pathname: orgId
+          ? ORG_AUTH_LOGIN_URL.replace(':orgId', orgId)
+          : AUTH_LOGIN_URL,
+        state: location.state
+      }}>
+        {trans("userAuth.userLogin")}
+      </StyledRouteLinkLogin>
         <NewButton
           disabled={!account || !verificationCode || !password || submitBtnDisable}
           onClick={onSubmit}
@@ -233,14 +257,7 @@ function UserRegister() {
           />
         )}
       </RegisterContent>
-      <StyledRouteLinkLogin to={{
-        pathname: orgId
-          ? ORG_AUTH_LOGIN_URL.replace(':orgId', orgId)
-          : AUTH_LOGIN_URL,
-        state: location.state
-      }}>
-        {trans("userAuth.userLogin")}
-      </StyledRouteLinkLogin>
+      
     </AuthContainer>
   );
 }

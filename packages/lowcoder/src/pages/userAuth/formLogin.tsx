@@ -133,7 +133,7 @@ export default function FormLogin(props: FormLoginProps) {
             {trans('userAuth.rememberPassword')}
           </label> */}
       </AccountLoginWrapper>
-      <AuthBottomView>
+      {/* <AuthBottomView>
         <StyledRouteLink to={{
           pathname: orgId
             ? ORG_AUTH_REGISTER_URL.replace(':orgId', orgId)
@@ -142,7 +142,7 @@ export default function FormLogin(props: FormLoginProps) {
         }}>
           {trans("userAuth.register")}
         </StyledRouteLink>
-      </AuthBottomView>
+      </AuthBottomView> */}
     </>
   );
 }
