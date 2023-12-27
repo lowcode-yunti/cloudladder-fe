@@ -122,7 +122,7 @@ export default function PermissionSetting() {
   return (
     <Level1SettingPageContentWithList>
       <Level1SettingPageTitleWithBtn>
-        {trans("settings.member")}
+        {trans("settings.userGroups")}
         {currentOrgAdmin(user) && (
           <CreateGroupingBtn
             loading={groupCreating}

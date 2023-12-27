@@ -1,11 +1,6 @@
 import _ from "lodash";
 import { checkCursorInBinding } from "../codeEditorUtils";
-import {
-  completeFromList,
-  CompletionContext,
-  CompletionResult,
-  ifNotIn,
-} from "../codeMirror";
+import { completeFromList, CompletionContext, CompletionResult, ifNotIn } from "../codeMirror";
 import { CompletionSource } from "./completion";
 
 const enum Token {
@@ -77,14 +72,7 @@ function completeKeywords(
     );
   }
   return ifNotIn(
-    [
-      "QuotedIdentifier",
-      "SpecialVar",
-      "String",
-      "LineComment",
-      "BlockComment",
-      ".",
-    ],
+    ["QuotedIdentifier", "SpecialVar", "String", "LineComment", "BlockComment", "."],
     completeFromList(completions)
   );
 }

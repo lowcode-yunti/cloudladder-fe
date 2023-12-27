@@ -14,7 +14,8 @@ import { CodeEditorPanel } from "../../pages/editor/codeEditorPanel";
 import { CodeEditorProps, StyleName } from "./codeEditorTypes";
 import { useClickCompNameEffect } from "./clickCompName";
 import { Layers } from "../../constants/Layers";
-import { OpenAIExtension } from "@lowcoder-ee/base/codeEditor/extensions/OpenAIExtension/OpenAIExtension";
+import { OpenAIExtension } from "./extensions/OpenAIExtension/OpenAIExtension";
+import { line } from "stylis";
 
 type StyleConfig = {
   minHeight: string;
@@ -234,6 +235,7 @@ function useCodeMirror(
     ...props,
     showLineNum,
     onChange: handleChange,
+    tooltipContainer: container.current,
   });
   useEffect(() => reconfigure(viewRef.current), [reconfigure]);
   useEffect(() => {
@@ -409,7 +411,7 @@ export function CodeEditor(props: CodeEditorProps) {
   const { expandable = true, ...editorProps } = props;
   const [disabled, setDisabled] = useState(false);
   return (
-    <>
+    <CodeEditorTooltipContainer>
       <CodeEditorCommon {...editorProps} editor={editor} disabled={disabled}>
         <Container
           styleName={props.styleName}
@@ -437,7 +439,7 @@ export function CodeEditor(props: CodeEditorProps) {
           exposingData={props.exposingData}
         />
       </CodeEditorCommon>
-    </>
+    </CodeEditorTooltipContainer>
   );
 }
 

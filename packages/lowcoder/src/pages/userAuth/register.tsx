@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useMemo } from "react";
 import {
   AuthContainer,
   ConfirmButton,
@@ -7,61 +7,48 @@ import {
   StyledRouteLinkLogin,
   TermsAndPrivacyInfo,
 } from "pages/userAuth/authComponents";
-import { FormInput, PasswordInput } from "lowcoder-design";
-import { AUTH_LOGIN_URL } from "constants/routesURL";
+import { FormInput, PasswordInput,messageInstance } from "lowcoder-design";
+import { AUTH_LOGIN_URL, ORG_AUTH_LOGIN_URL } from "constants/routesURL";
 import UserApi from "api/userApi";
 import { useRedirectUrl } from "util/hooks";
 import { checkEmailValid } from "util/stringUtils";
 import styled from "styled-components";
 import { requiresUnAuth } from "./authHOC";
-import { useLocation } from "react-router-dom";
+import { useLocation} from "react-router-dom";
 import { UserConnectionSource } from "@lowcoder-ee/constants/userConstants";
 import { trans } from "i18n";
 import { AuthContext, checkPassWithMsg, useAuthSubmit } from "pages/userAuth/authUtils";
 import { MailOutlined,EditOutlined,LockOutlined } from '@ant-design/icons'
-import { messageInstance } from "lowcoder-design";
+import { ThirdPartyAuth } from "pages/userAuth/thirdParty/thirdPartyAuth";
+import { useParams } from "react-router-dom";
 import { Input} from "antd";
+
 const StyledFormInput = styled(FormInput)`
   margin-bottom: 16px;
 `;
 
 const StyledButtonLeft = styled.div`
-/* margin-bottom: 8px; */
-/* display: flex; */
-/* align-items: center; */
-/* margin-right: auto;  */
-width:100px;
-background-color: rgb(73, 101, 242);
-border-radius: 6px;
-border:1px solid rgb(73, 101, 242);
-text-align: center;
+/* margin-bottom: 8px;
+display: flex;
+align-items: center;
+margin-right: auto;  */
 
-font-size: 14px;
-color: rgb(255, 255, 255);
-line-height: 30px;
+font-size: 16px;
+color: #4965f2;
+line-height: 16px;
 cursor: pointer; 
 
 :hover {
   /* color: #315efb; */
 }
 
-/* @media screen and (max-width: 640px) {
+@media screen and (max-width: 640px) {
   margin-bottom: 0;
-} */
+}
 `;
-
 
 const StyledPasswordInput = styled(PasswordInput)`
   margin-bottom: 16px;
-`;
-
-const RegisterContent = styled(FormWrapperMobile)`
-  display: flex;
-  flex-direction: column;
-
-  button {
-    margin: 20px 0 16px 0;
-  }
 `;
 
 const TermsAndPrivacyInfoWrapper = styled.div`
@@ -69,6 +56,12 @@ const TermsAndPrivacyInfoWrapper = styled.div`
   @media screen and (max-width: 640px) {
     margin: 10px 0 64px 0;
   }
+`;
+
+const RegisterContent = styled(FormWrapperMobile)`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 106px;
 `;
 
 const FlexContainer = styled.div`
@@ -92,32 +85,43 @@ function UserRegister() {
   const [verificationCode, setVerificationCode] = useState(""); //code
   const redirectUrl = useRedirectUrl();
   const location = useLocation();
-  const { systemConfig, inviteInfo } = useContext(AuthContext);
-  const authId = systemConfig.form.id;
+  const { systemConfig, inviteInfo, fetchUserAfterAuthSuccess } = useContext(AuthContext);
+  const invitationId = inviteInfo?.invitationId;
+  const orgId = useParams<any>().orgId;
+  const organizationId = useMemo(() => {
+    if(inviteInfo?.invitedOrganizationId) {
+      return inviteInfo?.invitedOrganizationId;
+    }
+    return orgId;
+  }, [ inviteInfo, orgId ])
+
+  const authId = systemConfig?.form.id;
+
   const { loading, onSubmit } = useAuthSubmit(
     () =>
       UserApi.formLogin({
         register: true,
         loginId: account,
         password: password,
-        invitationId: inviteInfo?.invitationId,
+        invitationId,
         source: UserConnectionSource.email,
+        orgId: organizationId,
         authId,
       }),
     false,
-    redirectUrl
+    redirectUrl,
+    fetchUserAfterAuthSuccess,
   );
 
   const sendRegisterButton = async () => {
     if (!checkEmailValid(account)) {
-      // alert('请输入有效的电子邮箱!');
-      messageInstance.warning('请输入有效的电子邮箱!')
+      alert('Please enter a valid email address!');
       return;
     }
 
 
     try {
-      
+
       const response = await UserApi.sendRegisterMail({ name: account });
       console.log(account);
       if (response.status === 200) {
@@ -131,35 +135,41 @@ function UserRegister() {
     } catch (error) {
       if (error.response && error.response.status === 500) {
         messageInstance.error('邮件发送失败，请检查网络')
-        alert('Email sent failed!');
-      } 
+        // alert('Email sent failed!');
+      } else {
+        console.error('Email sent failed!', error);
+      }
     }
   };
- 
+
 
   const verifyCode = async (value:string) => {
     try {
       const response = await UserApi.verifyRegisterCode({ name: account, inputCode:value });
 
+      console.log(value);
       if (response.status === 200) {
-        messageInstance.success('验证成功')
         // alert('验证成功，你现在可以进行注册');
+        messageInstance.success('验证成功')
         // Enable registration button here
       } else {
-        messageInstance.error('验证失败')
+        console.log(verificationCode);
+        messageInstance.error('邮件发送失败')
         // alert('Verification failed!');
       }
-    } catch (error:any) {
+    } catch (error) {
       if (error.response && error.response.status === 500) {
-        messageInstance.error('验证失败，请检查网络')
+        messageInstance.error('邮件发送失败，请检查网络')
         // alert('Verification failed!');
       } else {
-        // console.error('Verification failed!', error);
+        console.error('Verification failed!', error);
       }
     }
   };
-  const handleVerificationCodeChange = (e:any) => {
-    const value=e.target.value
+
+  const handleVerificationCodeChange = (value: string) => {
+    console.log(value);
+
     setVerificationCode(value);
     if (value.length == 8) {
       verifyCode(value);
@@ -169,12 +179,18 @@ function UserRegister() {
     return null;
   }
 
+  const registerHeading = trans("userAuth.register") // REACT_APP_LOWCODER_CUSTOM_AUTH_WELCOME_TEXT !== "" ? REACT_APP_LOWCODER_CUSTOM_AUTH_WELCOME_TEXT : trans("userAuth.register")
+  const registerSubHeading = '' // REACT_APP_LOWCODER_CUSTOM_AUTH_WELCOME_TEXT !== "" ? trans("userAuth.poweredByLowcoder") : ''
+
   return (
-    <AuthContainer title={trans("userAuth.register")} type="large">
+    <AuthContainer
+      heading={registerHeading}
+      subHeading={registerSubHeading}
+      type="large"
+    >
       <RegisterContent>
         <LoginCardTitle>{trans("userAuth.registerByEmail")}</LoginCardTitle>
         <StyledFormInput
-          prefix={<MailOutlined />}
           className="form-input"
           label={trans("userAuth.email")}
           onChange={(value, valid) => setAccount(valid ? value : "")}
@@ -184,32 +200,19 @@ function UserRegister() {
             errorMsg: trans("userAuth.inputValidEmail"),
           }}
         />
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline'}}>
-        <GetCodeInput
-        prefix={<EditOutlined />}
+        <StyledFormInput
           className="form-input"
           label={trans('userAuth.verificationCode')}
           onChange={handleVerificationCodeChange}
           placeholder={trans('userAuth.enterEmailVerificationCode')}
         />
-        <StyledButtonLeft onClick={sendRegisterButton}>{trans('userAuth.sendEmail')}</StyledButtonLeft>
-        </div>
-        
         <StyledPasswordInput
-        prefix={<LockOutlined />}
           className="form-input"
           valueCheck={checkPassWithMsg}
           onChange={(value, valid) => setPassword(valid ? value : "")}
           doubleCheck
         />
-        <div style={{display:'flex'}}>
-        {/* <StyledButtonLeft onClick={sendRegisterButton}>{trans('userAuth.sendEmail')}</StyledButtonLeft> */}
-         <StyledRouteLinkLogin to={{ pathname: AUTH_LOGIN_URL, state: location.state }}>
-         {trans("userAuth.userLogin")}
-          </StyledRouteLinkLogin>
-        </div>
-        
-        
+       
         <NewButton
           disabled={!account || !verificationCode || !password || submitBtnDisable}
           onClick={onSubmit}
@@ -217,11 +220,27 @@ function UserRegister() {
         >
           {trans("userAuth.register")}
         </NewButton>
+         {/* <TermsAndPrivacyInfo onCheckChange={(e) => setSubmitBtnDisable(!e.target.checked)} /> */}
         {/* <TermsAndPrivacyInfoWrapper>
           <TermsAndPrivacyInfo onCheckChange={(e) => setSubmitBtnDisable(!e.target.checked)} />
         </TermsAndPrivacyInfoWrapper> */}
         {/* <FlexContainer></FlexContainer> */}
+        {organizationId && (
+          <ThirdPartyAuth
+            invitationId={invitationId}
+            invitedOrganizationId={organizationId}
+            authGoal="register"
+          />
+        )}
       </RegisterContent>
+      <StyledRouteLinkLogin to={{
+        pathname: orgId
+          ? ORG_AUTH_LOGIN_URL.replace(':orgId', orgId)
+          : AUTH_LOGIN_URL,
+        state: location.state
+      }}>
+        {trans("userAuth.userLogin")}
+      </StyledRouteLinkLogin>
     </AuthContainer>
   );
 }

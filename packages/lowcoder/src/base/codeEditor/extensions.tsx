@@ -27,12 +27,7 @@ import {
   foldKeymap,
   indentOnInput,
 } from "@codemirror/language";
-import {
-  defaultKeymap,
-  history,
-  historyKeymap,
-  indentWithTab,
-} from "@codemirror/commands";
+import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirror/commands";
 import { highlightSelectionMatches, searchKeymap } from "@codemirror/search";
 import { Diagnostic, linter, lintKeymap } from "@codemirror/lint";
 import { EditorState, Prec } from "@codemirror/state";
@@ -65,10 +60,7 @@ import { CodeEditorTooltipContainer } from "./codeEditor";
 import { libNames } from "constants/libConstants";
 import { QueryContext } from "../../util/context/QueryContext";
 import { getIconExtension } from "./extensions/iconExtension";
-import {
-  highlightJsTheme,
-  useHighlightJsExtension,
-} from "./extensions/highlightJsExtension";
+import { highlightJsTheme, useHighlightJsExtension } from "./extensions/highlightJsExtension";
 import { trans } from "i18n";
 import log from "loglevel";
 import { highlightSyntaxExtension } from "./extensions/highlightSyntax";
@@ -153,11 +145,10 @@ const defaultTheme = EditorView.theme({
     outline: "none",
   },
   // matching brackets
-  "&.cm-editor .cm-scroller .cm-content[contenteditable=true] .cm-line .cm-matchingBracket":
-    {
-      color: "#40A072",
-      backgroundColor: "#e9f4e6",
-    },
+  "&.cm-editor .cm-scroller .cm-content[contenteditable=true] .cm-line .cm-matchingBracket": {
+    color: "#40A072",
+    backgroundColor: "#e9f4e6",
+  },
   // line number
   "& .cm-gutters": {
     "flex-shrink": 0,
@@ -268,9 +259,7 @@ const keyMapExtensions = Prec.highest(
   ])
 );
 
-export function useFocusExtension(
-  onFocus?: (focused: boolean) => void
-): [Extension, boolean] {
+export function useFocusExtension(onFocus?: (focused: boolean) => void): [Extension, boolean] {
   const [isFocus, setFocus] = useState(false);
   const onFocusRef = useRef<(focused: boolean) => void>();
   onFocusRef.current = onFocus;
@@ -303,9 +292,7 @@ export function lineNoExtension(showLineNumber?: boolean) {
   return [];
 }
 
-export function placeholderExtension(
-  placeholder?: string | HTMLElement
-): Extension {
+export function placeholderExtension(placeholder?: string | HTMLElement): Extension {
   return !!placeholder ? extendPlaceholder(placeholder) : [];
 }
 
@@ -332,13 +319,7 @@ export function useChangeExtension(
 }
 
 export function useCompletionSources(props: CodeEditorProps) {
-  const {
-    language,
-    codeType,
-    exposingData,
-    boostExposingData,
-    enableMetaCompletion,
-  } = props;
+  const { language, codeType, exposingData, boostExposingData, enableMetaCompletion } = props;
   const context = useContext(QueryContext); // FIXME: temporarily handle, expect to delete after the backend supports eval
   // auto-completion for comp exposing
   const exposingSource = useMemo(() => new ExposingCompletionSource(), []);
@@ -377,14 +358,7 @@ export function useCompletionSources(props: CodeEditorProps) {
       c.setIsFunction(codeType === "Function");
       return c.completionSource;
     });
-  }, [
-    enableMetaCompletion,
-    language,
-    codeType,
-    exposingSource,
-    ternServer,
-    sqlSource,
-  ]);
+  }, [enableMetaCompletion, language, codeType, exposingSource, ternServer, sqlSource]);
   return completionSources;
 }
 
@@ -402,10 +376,7 @@ export function useAutocompletionExtension(props: CodeEditorProps) {
   );
 }
 
-export function languageExtension(
-  language?: Language,
-  codeType?: CodeType
-): Extension {
+export function languageExtension(language?: Language, codeType?: CodeType): Extension {
   const lang = language ?? "javascript";
   const formatExtension = keymap.of([
     {
@@ -417,9 +388,7 @@ export function languageExtension(
           formatter(text)
             .then((newText) => {
               if (newText !== text) {
-                view.dispatch({
-                  changes: { from: 0, to: text.length, insert: newText },
-                });
+                view.dispatch({ changes: { from: 0, to: text.length, insert: newText } });
               }
             })
             .catch((e) => {
@@ -432,11 +401,7 @@ export function languageExtension(
       },
     },
   ]);
-  return [
-    languageSupports[lang],
-    highlightSyntaxExtension(lang, codeType),
-    formatExtension,
-  ];
+  return [languageSupports[lang], highlightSyntaxExtension(lang, codeType), formatExtension];
 }
 
 export function themeExtension(): Extension {
@@ -468,8 +433,7 @@ const esLintSource = async (view: EditorView) => {
     },
   };
   eSLinter.getRules().forEach((desc: any, name: any) => {
-    if (desc.meta.docs.recommended && !(name in config.rules))
-      config.rules[name] = "error";
+    if (desc.meta.docs.recommended && !(name in config.rules)) config.rules[name] = "error";
   });
   return esLint(eSLinter, config)(view);
 };
@@ -488,15 +452,9 @@ function getLintExtension(
     return diagnostics
       .filter((t) => {
         // exposingData doesn't trigger an error
-        if (
-          t.message.endsWith("' is not defined.") &&
-          t.message.startsWith("'")
-        ) {
+        if (t.message.endsWith("' is not defined.") && t.message.startsWith("'")) {
           const name = t.message.slice(1, -17);
-          if (
-            exposingDataRef.current.hasOwnProperty(name) ||
-            libNames.has(name)
-          ) {
+          if (exposingDataRef.current.hasOwnProperty(name) || libNames.has(name)) {
             return false;
           }
         }
@@ -512,14 +470,7 @@ function getLintExtension(
 const compartments: Compartment[] = [];
 
 export function useExtensions(props: CodeEditorProps) {
-  const {
-    showLineNum,
-    placeholder,
-    language,
-    codeType,
-    indentWithTab,
-    tooltipContainer,
-  } = props;
+  const { showLineNum, placeholder, language, codeType, indentWithTab, tooltipContainer } = props;
   // cache the frequently changed data into ref, avoiding reconfigure
   const exposingDataRef = useRef<Record<string, unknown>>({});
   exposingDataRef.current = props.exposingData ?? {};
@@ -530,31 +481,13 @@ export function useExtensions(props: CodeEditorProps) {
   const autocompletionExtension = useAutocompletionExtension(props);
   const [focusExtension, isFocus] = useFocusExtension(props.onFocus);
   const lineNoExt = useMemo(() => lineNoExtension(showLineNum), [showLineNum]);
-  const languageExt = useMemo(
-    () => languageExtension(language, codeType),
-    [language, codeType]
-  );
+  const languageExt = useMemo(() => languageExtension(language, codeType), [language, codeType]);
   const onChangeExt = useChangeExtension(props.onChange, props.extraOnChange);
-  const placeholderExt = useMemo(
-    () => placeholderExtension(placeholder),
-    [placeholder]
-  );
-  const indentWithTabExt = useMemo(
-    () => indentWithTabExtension(indentWithTab),
-    [indentWithTab]
-  );
-  const tooltipExt = useMemo(
-    () => tooltipExtension(tooltipContainer),
-    [tooltipContainer]
-  );
-  const lintExt = useMemo(
-    () => getLintExtension(codeType, exposingDataRef),
-    [codeType]
-  );
-  const iconExt = useMemo(
-    () => getIconExtension(props.enableIcon),
-    [props.enableIcon]
-  );
+  const placeholderExt = useMemo(() => placeholderExtension(placeholder), [placeholder]);
+  const indentWithTabExt = useMemo(() => indentWithTabExtension(indentWithTab), [indentWithTab]);
+  const tooltipExt = useMemo(() => tooltipExtension(tooltipContainer), [tooltipContainer]);
+  const lintExt = useMemo(() => getLintExtension(codeType, exposingDataRef), [codeType]);
+  const iconExt = useMemo(() => getIconExtension(props.enableIcon), [props.enableIcon]);
   const rawExtensions = useMemo(
     () => [
       basicSetup,
