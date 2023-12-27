@@ -4,28 +4,53 @@ import { trans } from 'i18n';
 import { checkEmailValid, checkPhoneValid } from "util/stringUtils";
 import UserApi from 'api/userApi';
 import styled from "styled-components";
+import { AUTH_LOGIN_URL } from "constants/routesURL";
+import { useLocation } from "react-router-dom";
 import { AuthContext, useAuthSubmit } from "pages/userAuth/authUtils";
+import defaultImage from 'assets/images/errorImg(2).png'
+import { MailOutlined,EditOutlined } from '@ant-design/icons'
 import {
   AUTH_RESETPASSWORD_URL
 } from "constants/routesURL";
 import {
   ConfirmButton,
   FormWrapperMobile,
-  LoginCardTitle
+  LoginCardTitle,
+  StyledRouteLinkLogin,
+  AuthContainer,
 } from "pages/userAuth/authComponents";
+import { messageInstance } from "lowcoder-design";
+const H2Style = styled.div`
+   font-weight: 600;
+  font-size: 28px;
+  color: #222222;
+  line-height: 28px;
+  margin-top: 13vh;
+  @media screen and (min-height: 700px) {
+    margin-top: 107px;
+  }
+  @media screen and (max-height: 700px) {
+    margin-top: 47px;
+  }
+  line-height: 28px;
+`;
 
 const StyledContentContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  padding: 28px 36px;
   border-radius: 20px;
-  padding:100px;
-  width: 100%;
+  height: 521px;
+  width: 480px;
   max-width: 600px;
   background-color: #fff;
-  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1); 
+  box-shadow: rgba(246, 248, 250, 0.85) 0px 0px 20px 20px;
 `;
 
 const CenteredAuthSection = styled.div`
-  height: 100vh;
   display: flex;
+  flex-direction:column;
   justify-content: center;
   align-items: center;
 `;
@@ -36,22 +61,22 @@ const CenteredButtonContainer = styled.div`
   margin-top: 80px;
 `;
 
-const AccountLoginWrapper =styled(FormWrapperMobile)`
+const AccountLoginWrapper = styled(FormWrapperMobile)`
   display: flex;
   flex-direction: column;
-  align-items: left;
+
   margin-bottom: 106px;
 `;
 
-const StyledImageContainer = styled.div`
-  display: flex;
-  justify-content: left;
-  align-items: center;
-  width: 100%; 
-  max-width: 100px; /* 设置最大宽度 */
-  margin-bottom: 20px; 
-  margin-bottom: 60px; 
-`;
+// const StyledImageContainer = styled.div`
+//   display: flex;
+//   justify-content: left;
+//   align-items: center;
+//   width: 100%; 
+//   max-width: 100px; /* 设置最大宽度 */
+//   margin-bottom: 20px; 
+//   margin-bottom: 60px; 
+// `;
 
 const StyledFormInput = styled(FormInput)`
   width: 200%; 
@@ -59,8 +84,27 @@ const StyledFormInput = styled(FormInput)`
 `;
 
 const NewButton = styled(ConfirmButton)`
-  width: 200%;
+  margin: 0px !important;
 `;
+const FlexContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -80px; 
+`;
+const RegisterContent = styled(FormWrapperMobile)`
+  display: flex;
+  flex-direction: column;
+  button {
+    margin: 20px 0 16px 0;
+  }
+`;
+const StyledImageContainer = styled.img`
+/* border: 1px solid #d9d6d6; */
+width: 130px;
+height: 40px;
+
+`
 
 export default function CaptchaComponent() {
   const [name, setAccount] = useState('');
@@ -68,6 +112,7 @@ export default function CaptchaComponent() {
   const [imageUrl, setImageUrl] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const location = useLocation();
   // const redirectUrl = AUTH_RESETPASSWORD_URL;
   const redirectUrl = '';
 
@@ -83,28 +128,34 @@ export default function CaptchaComponent() {
 
   useEffect(() => {
     fetchCaptchaImage();
-  }, []);
-
+    const timer = setInterval(() => {
+      fetchCaptchaImage();
+      console.log('Hello World!');
+    },300000);
+    return ()=>{
+      clearInterval(timer)
+    }
+  },[]);
 
   const fetchCaptchaImage = async () => {
     try {
       const response = await UserApi.getCaptchaRandom();
-    
+
+
   
-      console.log(response.data);
       const imageUrlResponse = await UserApi.getCaptchaImage(response.data);
-  
-      console.log(imageUrlResponse.data);
+
+     
       if (imageUrlResponse.status === 200) {
-        setImageUrl(imageUrlResponse.data); 
-        console.log(imageUrlResponse.data); 
+        setImageUrl(imageUrlResponse.data);
+       
       }
     } catch (error) {
       console.error('Error fetching captcha image:', error);
       setErrorMessage('Failed to fetch captcha image');
     }
   };
-  
+
 
 
   const handleVerificationCodeChange = (value: string) => {
@@ -134,66 +185,121 @@ export default function CaptchaComponent() {
   //     }
   //   }
   // };
-  const submitEmial =async()=>{
+  const submitEmial = async () => {
     try {
-      const response = await UserApi.sendResetPasswordEmail({ name: name,  inputCode: inputCode });
+      const response = await UserApi.sendResetPasswordEmail({ name: name, inputCode: inputCode });
       if (response.status === 200) {
-        alert('发送邮件成功，请注意查收');
+        localStorage.setItem('emailName',name)
+        messageInstance.success('发送邮件成功，请注意查收')
+        
         // Enable registration button here
       } else {
-        alert('验证失败!');
+        messageInstance.error('验证码输入错误')
       }
     } catch (error) {
       if (error.response && error.response.status === 500) {
-        alert('验证失败!');
+        messageInstance.error('验证失败!')
       } else {
         console.error('验证失败!', error);
       }
     }
-    
-    
-    
-  }
 
+
+
+  }
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.target as HTMLImageElement
+    // target.src='https://img0.baidu.com/it/u=2570981049,4015989895&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=400'
+    target.src = defaultImage
+  }
   return (
     <>
-    
-    {successMessage && <div style={{ color: 'green' }}>{successMessage}</div>}
-    {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
-      <CenteredAuthSection>
-        <StyledContentContainer>
-        <LoginCardTitle>{trans("userAuth.forgetPassword")}</LoginCardTitle>
-          <AccountLoginWrapper>
-            <form>
-              <StyledFormInput
-                className="form-input"
-                label={trans('userAuth.email')}
-                onChange={(value, valid) => setAccount(valid ? value : '')}
-                placeholder={trans('userAuth.inputEmail')}
-                checkRule={{
-                  check: (value) => checkPhoneValid(value) || checkEmailValid(value),
-                  errorMsg: trans('userAuth.inputValidEmail'),
-                }}
-              />
-              <StyledImageContainer>
-                <img src={imageUrl} alt={trans('userAuth.captchaImage')} />
-              </StyledImageContainer>
-              <StyledFormInput
-                className="form-input"
-                label={trans('userAuth.imageCaptcha')}
-                onChange={handleVerificationCodeChange}
-                placeholder={trans('userAuth.incorrectCaptchaEntered')}
-              />
-              <CenteredButtonContainer>
-                <NewButton loading={loading} disabled={!name || !inputCode || inputCode.length !== 6}
-                  onClick={submitEmial}>
-                  {trans("userAuth.sendEmail")}
-                </NewButton>
-              </CenteredButtonContainer>
-            </form>
-          </AccountLoginWrapper>
-        </StyledContentContainer>
-      </CenteredAuthSection>
+
+      <AuthContainer title={trans('userAuth.forgetPassword')} type="large">
+      <LoginCardTitle>{trans("userAuth.resetPassword")}</LoginCardTitle>
+        <RegisterContent>
+          <StyledFormInput
+            prefix={<MailOutlined />}
+            className="form-input"
+            label={trans("userAuth.email")}
+            onChange={(value, valid) => setAccount(valid ? value : "")}
+            placeholder={trans("userAuth.inputEmail")}
+            checkRule={{
+              check: checkEmailValid,
+              errorMsg: trans("userAuth.inputValidEmail"),
+            }}
+          />
+          
+          <StyledFormInput
+            prefix={<EditOutlined />}
+            className="form-input"
+            label={trans('userAuth.imageCaptcha')}
+            onChange={(value, valid) =>setVerificationCode(valid ? value : "") }
+            placeholder={trans('userAuth.retrievePasswordCode')}
+          />
+          <div style={{display:'flex'}}>
+          <StyledImageContainer onError={handleImageError} src={imageUrl} alt={trans('userAuth.captchaImage')} />
+          <StyledRouteLinkLogin to={{ pathname: AUTH_LOGIN_URL, state: location.state }}>{trans("userAuth.userLogin")}</StyledRouteLinkLogin>
+          </div>
+          
+          <NewButton
+            loading={loading} 
+            // disabled={!name || !inputCode || inputCode.length !== 6}
+            disabled={inputCode.length!==6}
+            onClick={submitEmial}
+          >
+            {trans("userAuth.sendEmail")}
+          </NewButton>
+          
+        </RegisterContent>
+      </AuthContainer>
     </>
-  );
+  )
+
+  // return (
+  //   <>
+  //     {successMessage && <div style={{ color: 'green' }}>{successMessage}</div>}
+  //     {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
+
+  //     <CenteredAuthSection>
+  //       <H2Style>{trans('userAuth.forgetPassword')}</H2Style>
+  //       <StyledContentContainer>
+
+  //         {/* <LoginCardTitle>{trans("userAuth.forgetPassword")}</LoginCardTitle> */}
+  //         <AccountLoginWrapper>
+  //           <form>
+  //             <StyledFormInput
+  //               className="form-input"
+  //               label={trans('userAuth.email')}
+  //               onChange={(value, valid) => setAccount(valid ? value : '')}
+  //               placeholder={trans('userAuth.inputEmail')}
+  //               checkRule={{
+  //                 check: (value) => checkPhoneValid(value) || checkEmailValid(value),
+  //                 errorMsg: trans('userAuth.inputValidEmail'),
+  //               }}
+  //             />
+  //             <StyledImageContainer>
+  //               <img src={imageUrl} alt={trans('userAuth.captchaImage')} />
+  //             </StyledImageContainer>
+  //             <StyledFormInput
+  //               className="form-input"
+  //               label={trans('userAuth.imageCaptcha')}
+  //               onChange={handleVerificationCodeChange}
+  //               placeholder={trans('userAuth.incorrectCaptchaEntered')}
+  //             />
+  //             <CenteredButtonContainer>
+  //               <NewButton loading={loading} disabled={!name || !inputCode || inputCode.length !== 6}
+  //                 onClick={submitEmial}>
+  //                 {trans("userAuth.sendEmail")}
+  //               </NewButton>
+  //             </CenteredButtonContainer>
+  //           </form>
+  //           <StyledRouteLinkLogin to={{ pathname: AUTH_LOGIN_URL, state: location.state }}>{trans("userAuth.userLogin")}</StyledRouteLinkLogin>
+  //         </AccountLoginWrapper>
+
+  //       </StyledContentContainer>
+
+  //     </CenteredAuthSection>
+  //   </>
+  // );
 };

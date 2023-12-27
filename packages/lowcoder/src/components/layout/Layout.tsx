@@ -1,5 +1,5 @@
 import { Route, Switch } from "react-router-dom";
-import { Layout as AntdLayout } from "antd";
+import { Layout as AntdLayout,Menu} from "antd";
 import { AppHeader } from "pages/common/header";
 import * as React from "react";
 import { ReactElement } from "react";
@@ -41,6 +41,8 @@ export function Layout(props: LayoutProps) {
       path={FOLDER_URL}
     />,
   ];
+  
+  
   props.sections.forEach((section) => {
     section.items.forEach((item) => {
       routes.push(
@@ -55,11 +57,11 @@ export function Layout(props: LayoutProps) {
   });
 
   return (
-    <AntdLayout style={{ height: "100%" }}>
+    <AntdLayout  style={{ height: "100%" }}>
       <AppHeader />
       <HelpDropdown />
       <AntdLayout>
-        <SideBarV2 className={CNSidebar}>
+        <SideBarV2  className={CNSidebar}>
           {props.sections
             .filter((section) => section.items.length > 0)
             .map((section, index) => (

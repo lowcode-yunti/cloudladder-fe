@@ -11,6 +11,7 @@ const Wrapper = styled.div<{ size?: SideBarSize; selected?: boolean }>`
   height: ${(props) => (props.size === "small" ? "36px" : "44px")};
   border-radius: 4px;
   display: flex;
+
   align-items: center;
   padding: 0 8px 0 26px;
   cursor: pointer;
@@ -31,6 +32,8 @@ export const SideBarItem = (props: SideBarItemProps) => {
   const Icon = props.icon;
   const Text = props.text;
   const currentPath = useLocation().pathname;
+
+  
   return (
     <Wrapper
       style={props.style}

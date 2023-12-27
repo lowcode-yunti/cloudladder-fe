@@ -121,6 +121,7 @@ const PreviewBtn = styled(TacoButton)`
   height: 28px;
   background: #4965f2;
   border-radius: 4px 0 0 4px;
+  width: 100px;
 `;
 
 const SnapshotBtnWrapper = styled.div`
@@ -149,6 +150,7 @@ const LoginBtn = styled(TacoButton)`
 `;
 const GrayBtn = styled(TacoButton)`
   &&& {
+    width: 118px;
     color: #ffffff;
     background: #8b8fa34c;
     border: none;

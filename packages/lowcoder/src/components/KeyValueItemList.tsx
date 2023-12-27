@@ -15,7 +15,7 @@ import {
 } from "lowcoder-design";
 import { trans } from "i18n";
 import { Children, PropsWithChildren, ReactNode, useState } from "react";
-import styled from "styled-components";
+import styled,{ css } from "styled-components";
 import EmptyItem from "./EmptyItem";
 import LinkPlusButton from "./LinkPlusButton";
 
@@ -57,6 +57,10 @@ const ListWrapper = styled.div`
   }
 `;
 
+const overrideStyle = {
+  width: '280px', // 覆盖子组件中使用了&&&增加的特定性的样式
+  color: 'red', // 可以覆盖子组件中的颜色
+};
 const ItemWrapper = styled.div<{ popover: boolean; active: boolean; hasValue: boolean }>`
   height: 32px;
   font-size: 13px;
@@ -221,6 +225,7 @@ export function KeyValueItemListWithNewCreateState(
   };
 
   return (
+   
     <KeyValueItemList
       {...props}
       onEmptyClick={handleAdd}

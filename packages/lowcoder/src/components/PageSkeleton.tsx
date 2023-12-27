@@ -81,6 +81,7 @@ export default function PageSkeleton(props: IProps) {
   // {/* headerStart={REACT_APP_LOWCODER_SHOW_BRAND === 'true' ? REACT_APP_LOWCODER_CUSTOM_LOGO !== "" ? <img src={REACT_APP_LOWCODER_CUSTOM_LOGO} alt="logo" /> :<StyledLogoWithName branding={true} /> : <StyledLogoHome branding={true} />} */}
 
   return (
+   
     <Layout>
       {!hideHeader && isHeaderReady && (
         <Header 

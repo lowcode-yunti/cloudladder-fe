@@ -57,6 +57,7 @@ export type SideBarItemType = Omit<SideBarItemProps, "selected"> & {
   onSelected?: (routePath: string, currentPath: string) => boolean; // customize select logic from url path
   routePath: string;
   routePathExact?: boolean;
+  aaabb?:any;
   visible?: (params: { user: User; applications: ApplicationMeta[] }) => boolean;
   routeComp: React.ComponentType<any>;
 };

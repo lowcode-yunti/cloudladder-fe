@@ -64,7 +64,9 @@ const thirdPartyLoginLabel = (name: string) => trans("userAuth.signInLabel", { n
 export const ThirdPartyBindCard = () => {
   const { systemConfig } = useContext(AuthContext);
   return (
-    <AuthContainer heading={trans("userAuth.bindAccount")}>
+    
+    <AuthContainer title={trans("userAuth.bindAccount")}>
+      
       <ThirdAuthWrapper>
         <ThirdPartyAuth
           authGoal="bind"

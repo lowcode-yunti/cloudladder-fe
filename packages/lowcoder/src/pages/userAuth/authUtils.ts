@@ -48,6 +48,7 @@ export function useAuthSubmit(
   return {
     loading: loading,
     onSubmit: () => {
+      
       setLoading(true);
       requestFunc()
         .then((resp) => authRespValidate(
@@ -57,7 +58,10 @@ export function useAuthSubmit(
           onAuthSuccess,
         ))
         .catch((e) => {
-          messageInstance.error(e.message);
+          //判断后端有没有返回提示信息没有，有的话就提示
+          if(e.message){
+            messageInstance.error(e.message);
+          }
         })
         .finally(() => setLoading(false));
     },
@@ -77,6 +81,8 @@ export function authRespValidate(
   redirectUrl: string | null,
   onAuthSuccess?: () => void
 ) {
+
+  
   let replaceUrl = redirectUrl || BASE_URL;
   const baseUrl = `${window.location.protocol}//${window.location.host}`;
 

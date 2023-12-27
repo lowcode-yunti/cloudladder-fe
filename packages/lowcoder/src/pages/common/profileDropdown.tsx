@@ -26,6 +26,27 @@ import { trans } from "i18n";
 import { showSwitchOrg } from "@lowcoder-ee/pages/common/customerService";
 import { checkIsMobile } from "util/commonUtils";
 import { selectSystemConfig } from "redux/selectors/configSelectors";
+import InviteDialog from "../common/inviteDialog";
+import {InviteUserIcon} from "lowcoder-design";
+const InviteUser = styled.div`
+  /* position: absolute;
+  display: flex;
+  align-items: center;
+  left: 10px;
+  top: calc(100vh - 60px);
+  padding: 12px 26px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 219px;
+
+  :hover {
+    color: #315efb;
+
+    svg g g {
+      stroke: #315efb;
+    }
+  } */
+`;
 import { ItemType } from "antd/es/menu/hooks/useItems";
 
 const ProfileWrapper = styled.div`
@@ -185,61 +206,40 @@ export default function ProfileDropdown(props: DropDownProps) {
             <OrgRoleLabel>{OrgRoleInfo[currentOrgRoleId].name}</OrgRoleLabel>
           )}
         </ProfileWrapper>
-      ),
-    },
-    {
-      key: 'logout',
-      label: trans("profile.logout"),
-    }
-  ]
-
-  if(orgs && orgs.length > 0 && showSwitchOrg(props.user, sysConfig)) {
-    const switchOrgSubMenu = orgs.map((org: Org) => ({
-      key: org.id,
-      icon: currentOrgId === org.id && <CheckoutIcon />,
-      label: org.name
-    }))
-
-    let addWorkSpace:ItemType[] = [];
-    if(!checkIsMobile(window.innerWidth)) {
-      addWorkSpace = [
-        { type: 'divider'},
-        {
-          key: 'newOrganization',
-          icon: <AddIcon />,
-          label: trans("profile.createOrg")
-        }
-      ]
-    }
-
-    const switchOrgMenu = {
-      key: 'switchOrg',
-      label: trans("profile.switchOrg"),
-      popupOffset: [4, -12],
-      children: [
-        {
-          key: 'joinedOrg',
-          label: (
-            <CommonTextLabel style={{ margin: "8px", color: "#B8B9BF" }}>
-              {trans("profile.joinedOrg")}
-            </CommonTextLabel>
-          ),
-          disabled: true,
-        },
-        ...switchOrgSubMenu,
-        ...addWorkSpace,
-      ]
-    }
-    profileDropdownMenuItems.splice(1, 0, switchOrgMenu);
-  }
-
-  const menu = (
-    <DropdownMenu
-      style={{ width: "192px" }}
-      onClick={handleClick}
-      expandIcon={<StyledPackUpIcon />}
-      items={profileDropdownMenuItems}
-    />
+      </Menu.Item>
+      {orgs && orgs.length > 0 && showSwitchOrg(props.user, sysConfig) && (
+        <StyledDropdownSubMenu
+          key="switchOrg"
+          title={trans("profile.switchOrg")}
+          popupOffset={[4, -12]}
+        >
+          <CommonTextLabel style={{ margin: "8px", color: "#B8B9BF" }}>
+            {trans("profile.joinedOrg")}
+          </CommonTextLabel>
+          {orgs.map((org: Org) => {
+            const MenuItem = (currentOrgId === org.id ? SelectDropMenuItem : Menu.Item) as React.ElementType;
+            return (
+              <MenuItem key={org.id} icon={currentOrgId === org.id && <CheckoutIcon />}>
+                {org.name}
+              </MenuItem>
+            );
+          })}
+          {!checkIsMobile(window.innerWidth) && (
+            <>
+              <Menu.Divider />
+              <Menu.Item key="newOrganization" icon={<AddIcon />}>
+                {trans("profile.createOrg")}
+              </Menu.Item>
+            </>
+          )}
+        </StyledDropdownSubMenu>
+      )}
+      <Menu.Item key="inviteUser">
+      <InviteDialog trigger={<InviteUser>{trans("home.inviteUser")}</InviteUser>} style={{ marginLeft: "auto" }}/>
+      </Menu.Item>
+      <Menu.Item key="logout">{trans("profile.logout")}</Menu.Item>
+      
+    </DropdownMenu>
   );
   return (
     <>

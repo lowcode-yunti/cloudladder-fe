@@ -515,21 +515,14 @@ export default function ApplicationHome() {
                 onSelected: (_, currentPath) =>
                   currentPath.split("/")[1] === "setting",
               },
+             
             ],
           },
         ]}
       />
-      {user.orgDev && (
-        <InviteDialog
-          trigger={
-            <InviteUser>
-              <InviteUserIcon style={{ marginRight: "8px" }} />
-              {trans("home.inviteUser")}
-            </InviteUser>
-          }
-          style={{ marginLeft: "auto" }}
-        />
-      )}
+      {/* {user.orgDev && (
+        <InviteDialog trigger={<InviteUser><InviteUserIcon style={{ marginRight: "8px" }} />{trans("home.inviteUser")}</InviteUser>} style={{ marginLeft: "auto" }}/>
+      )} */}
     </DivStyled>
   );
 }

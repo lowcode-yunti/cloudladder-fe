@@ -6,24 +6,27 @@ import styled from "styled-components";
 import ReactHotkeys from "util/hotkeys";
 import { StyledLink } from "pages/common/styledComponent";
 import { trans } from "i18n";
-
+import defaultImage from 'assets/images/loginPosterImg.png'
 const AuthCardContainer = styled.div`
-  display: flex;
+  /* display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  height: 100%;
+  height: 100%; */
   background-size: 100% 100%;
+  position: absolute;
+  top: 20vh;
+  left: 58vw;
 `;
 
 const AuthCard = styled.div`
   display: flex;
   flex-direction: column;
-  width: 480px;
+  width: 378px;
   background: #ffffff;
   box-shadow: 0 0 20px 20px rgba(246, 248, 250, 0.85);
-  border-radius: 16px;
-  padding: 28px 36px;
+  /* border-radius: 16px; */
+  padding: 28px;
   margin-top: 40px;
   @media screen and (max-width: 640px) {
     margin: 32px 18px 18px 18px;
@@ -49,6 +52,7 @@ const AuthCardHeading = styled.div<{ type?: string }>`
     line-height: 23px;
     ${(props) => props.type === "large" && "margin-top: 32px"}
   }
+ 
 `;
 
 const AuthCardSubHeading = styled.div`
@@ -114,8 +118,8 @@ const AuthBottom = styled.div`
 `;
 
 const StyledConfirmButton = styled(TacoButton)`
-  border-radius: 8px;
-  height: 48px;
+  /* border-radius: 8px; */
+  /* height: 48px; */
   font-size: 16px;
   line-height: 16px;
   margin-top: 8px;
@@ -129,19 +133,15 @@ export const AuthContainer = (props: {
   type?: string
 }) => {
   return (
+    <>
+     <img  style={{width:'550px',height:'100vh'}} src={defaultImage} alt="" />
     <AuthCardContainer>
-      <AuthCardHeading
-        type={props.type}
-      >
-        {props.heading || ""}
-      </AuthCardHeading>
-      { props.subHeading && (
-        <AuthCardSubHeading>
-          {props.subHeading}
-        </AuthCardSubHeading>
-      )}
+     
+      {/* <AuthCardTitle type={props.type}>{props.title || ""}</AuthCardTitle> */}
       <AuthCard>{props.children}</AuthCard>
     </AuthCardContainer>
+    </>
+    
   );
 };
 
@@ -262,9 +262,9 @@ export const StyledRouteLink = styled(Link)`
   display: flex;
   align-items: center;
 
-  font-size: 16px;
+  font-size: 14px;
   color: #4965f2;
-  line-height: 16px;
+  /* line-height: 16px; */
   margin-left: auto;
 
   :hover {
