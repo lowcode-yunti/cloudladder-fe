@@ -112,6 +112,7 @@ export default function CaptchaComponent() {
   const [imageUrl, setImageUrl] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [ isactivity,setActivity]=useState(false)
   const location = useLocation();
   // const redirectUrl = AUTH_RESETPASSWORD_URL;
   const redirectUrl = '';
@@ -186,11 +187,13 @@ export default function CaptchaComponent() {
   //   }
   // };
   const submitEmial = async () => {
+    setActivity(false)
     try {
       const response = await UserApi.sendResetPasswordEmail({ name: name, inputCode: inputCode });
       if (response.status === 200) {
         localStorage.setItem('emailName',name)
         messageInstance.success('发送邮件成功，请注意查收')
+        setActivity(true)
         
         // Enable registration button here
       } else {
@@ -245,7 +248,7 @@ export default function CaptchaComponent() {
           <NewButton
             loading={loading} 
             // disabled={!name || !inputCode || inputCode.length !== 6}
-            disabled={inputCode.length!==6}
+            disabled={inputCode.length!==6 || isactivity}
             onClick={submitEmial}
           >
             {trans("userAuth.sendEmail")}
