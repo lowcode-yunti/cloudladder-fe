@@ -64,9 +64,7 @@ const thirdPartyLoginLabel = (name: string) => trans("userAuth.signInLabel", { n
 export const ThirdPartyBindCard = () => {
   const { systemConfig } = useContext(AuthContext);
   return (
-    
-    <AuthContainer title={trans("userAuth.bindAccount")}>
-      
+    <AuthContainer heading={trans("userAuth.bindAccount")}>
       <ThirdAuthWrapper>
         <ThirdPartyAuth
           authGoal="bind"
@@ -138,7 +136,7 @@ function Login() {
 
   return (
     <AuthContainer
-      heading={loginHeading}
+      // heading={loginHeading}
       subHeading={loginSubHeading}
     >
       <FormLogin organizationId={organizationId} />

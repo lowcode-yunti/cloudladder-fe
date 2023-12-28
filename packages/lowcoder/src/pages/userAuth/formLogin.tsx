@@ -15,8 +15,8 @@ import { UserConnectionSource } from "@lowcoder-ee/constants/userConstants";
 import { trans } from "i18n";
 import { AuthContext, useAuthSubmit } from "pages/userAuth/authUtils";
 import { ThirdPartyAuth } from "pages/userAuth/thirdParty/thirdPartyAuth";
-import { AUTH_REGISTER_URL, AUTH_CAPTCHA_URL } from "constants/routesURL";
-import { useLocation,Link} from "react-router-dom";
+import { AUTH_REGISTER_URL,  AUTH_CAPTCHA_URL,ORG_AUTH_REGISTER_URL } from "constants/routesURL";
+import { useLocation, useParams,Link} from "react-router-dom";
 import {LockOutlined,UserOutlined } from '@ant-design/icons'
 const AccountLoginWrapper = styled(FormWrapperMobile)`
   display: flex;
@@ -34,10 +34,19 @@ const RegisterButton=styled.button`
     background-color: #f2f2f2;
   }
 `
-export default function FormLogin() {
+
+
+
+type FormLoginProps = {
+  organizationId?: string;
+}
+
+export default function FormLogin(props: FormLoginProps) {
+
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+
   const redirectUrl = useRedirectUrl();
   const { systemConfig, inviteInfo, fetchUserAfterAuthSuccess } = useContext(AuthContext);
   const invitationId = inviteInfo?.invitationId;
@@ -105,6 +114,15 @@ export default function FormLogin() {
         <ConfirmButton loading={loading} disabled={!account || !password} onClick={onSubmit}>
           {trans("userAuth.login")}
         </ConfirmButton>
+
+        {props.organizationId && (
+          <ThirdPartyAuth
+            invitationId={invitationId}
+            invitedOrganizationId={props.organizationId}
+            authGoal="login"
+          />
+        )}
+
         <Link to={{ pathname: AUTH_REGISTER_URL, state: location.state }}>
         <RegisterButton>注册</RegisterButton>
         </Link>
@@ -118,21 +136,16 @@ export default function FormLogin() {
             {trans('userAuth.rememberPassword')}
           </label> */}
       </AccountLoginWrapper>
-      
       {/* <AuthBottomView>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-            <StyledRouteLink to={{ pathname: AUTH_CAPTCHA_URL, state: location.state }}>
-              {trans("userAuth.forgetPassword")}
-            </StyledRouteLink>
-          </div>
-          <ThirdPartyAuth invitationId={invitationId} authGoal="login" />
-          {systemConfig.form.enableRegister && (
-            <StyledRouteLink to={{ pathname: AUTH_REGISTER_URL, state: location.state }}>
-              {trans("userAuth.register")}
-            </StyledRouteLink>
-          )}
+        <StyledRouteLink to={{
+          pathname: orgId
+            ? ORG_AUTH_REGISTER_URL.replace(':orgId', orgId)
+            : AUTH_REGISTER_URL,
+          state: location.state
+        }}>
+          {trans("userAuth.register")}
+        </StyledRouteLink>
       </AuthBottomView> */}
-     
-    </>
+   </>
   );
 }

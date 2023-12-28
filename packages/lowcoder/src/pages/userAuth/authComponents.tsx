@@ -15,8 +15,8 @@ const AuthCardContainer = styled.div`
   height: 100%; */
   background-size: 100% 100%;
   position: absolute;
-  top: 20vh;
-  left: 58vw;
+  top: 10vh;
+  left: 56vw;
 `;
 
 const AuthCard = styled.div`
@@ -138,6 +138,17 @@ export const AuthContainer = (props: {
     <AuthCardContainer>
      
       {/* <AuthCardTitle type={props.type}>{props.title || ""}</AuthCardTitle> */}
+
+      <AuthCardHeading
+        type={props.type}
+      >
+        {props.heading || ""}
+      </AuthCardHeading>
+      { props.subHeading && (
+        <AuthCardSubHeading>
+          {props.subHeading}
+        </AuthCardSubHeading>
+      )}
       <AuthCard>{props.children}</AuthCard>
     </AuthCardContainer>
     </>
