@@ -26,14 +26,9 @@ import { trans } from "i18n";
 import { showSwitchOrg } from "@lowcoder-ee/pages/common/customerService";
 import { checkIsMobile } from "util/commonUtils";
 import { selectSystemConfig } from "redux/selectors/configSelectors";
-<<<<<<< HEAD
-import { ItemType } from "antd/es/menu/hooks/useItems";
-import InviteDialog from "../common/inviteDialog";
-=======
 import InviteDialog from "../common/inviteDialog";
 import {InviteUserIcon} from "lowcoder-design";
 import { ItemType } from "antd/es/menu/hooks/useItems";
->>>>>>> 8d70bd651df8528dd5f6ff2c7f0dbe7cad58c185
 const InviteUser = styled.div`
   /* position: absolute;
   display: flex;

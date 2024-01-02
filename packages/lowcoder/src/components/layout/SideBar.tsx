@@ -4,8 +4,16 @@ import styled from "styled-components";
 import { HomeOutlined, PartitionOutlined, AliyunOutlined, BranchesOutlined, PicLeftOutlined, CodeSandboxOutlined, RestOutlined, SettingOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom';
 import InviteDialog from '../../pages/common/inviteLanding'
-import {InviteUserIcon} from "lowcoder-design";
+import { InviteUserIcon } from "lowcoder-design";
 import { trans } from "../../i18n";
+import { useEffect } from 'react'
+import { getUser } from "../../redux/selectors/usersSelectors";
+import { User } from "../../constants/userConstants";
+import { useSelector } from "react-redux";
+import { AppState } from "../../redux/reducers";
+import { ApplicationMeta } from "../../constants/applicationConstants";
+import { normalAppListSelector } from "../../redux/selectors/applicationSelector";
+
 const Sider = styled(Layout.Sider)`
   /* height: calc(100vh - ${TopHeaderHeight}); */
 
@@ -50,8 +58,10 @@ const InviteUser = styled.div`
   }
 `;
 
-export default function SideBar(props: any) {
+export default function SideBar(props:any) {
   const { children, ...otherProps } = props;
+  const user = useSelector<AppState, User>(getUser);
+  const applications = useSelector<AppState, ApplicationMeta[]>(normalAppListSelector);
   const newIcon = [
     <HomeOutlined />, <PartitionOutlined />,
     <AliyunOutlined />, <BranchesOutlined />,
@@ -59,33 +69,26 @@ export default function SideBar(props: any) {
     <RestOutlined />, <SettingOutlined />,
     <InviteUserIcon />
   ]
-  // let inviteUserObj={
-  //   icon:'',
-  //   routeComp:'',
-  //   text:{
-  //     props:{children:'邀请成员'}
-  //   },
-  //   routePath:''
-  // }
-  // props.children[0].props.items.push(inviteUserObj)
-
-  const data = props.children[0].props.items.map((item, index) => {
+  //菜单栏权限筛选
+  let propsData = props.children[0].props.items.filter((item) => item.visible ? item.visible({ user: user, applications: applications }) : true)
+  const data = propsData.map((item, index) => {
     return {
       label: item.text.props.children,
-      key: index,
+      key: item.routePath,
       icon: newIcon[index],
-      routepath:item.routePath
+      routepath: item.routePath
     }
   })
-let history = useHistory()
-const clickItme=(event)=>{
-  history.push(event.item.props.routepath)
-}
+  let history = useHistory() //获取路由信息
 
+  const newpathname = history.location.pathname
+  const clickItme = (event) => {
+    history.push(event.item.props.routepath)
+  }
   return (
     <Sider collapsedWidth='48' width='150' collapsible >
       {/* <InviteDialog trigger={<InviteUser><InviteUserIcon style={{ marginRight: "8px" }} />{trans("home.inviteUser")}</InviteUser>} style={{ marginLeft: "auto" }}/> */}
-      <Menu theme="dark" onSelect={clickItme}  defaultSelectedKeys={['0']} items={data}>
+      <Menu theme="dark" selectedKeys={[newpathname]} onSelect={clickItme} defaultSelectedKeys={['/apps']} items={data}>
       </Menu>
     </Sider>
   )
@@ -94,7 +97,5 @@ const clickItme=(event)=>{
   //   <Sider theme="light" width={244} {...otherProps}>
   //     {props.children}
   //   </Sider>
-
-
   // );
 }

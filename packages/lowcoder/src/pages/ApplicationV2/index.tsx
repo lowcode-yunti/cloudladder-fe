@@ -275,6 +275,7 @@ export default function ApplicationHome() {
   }, [user.currentOrgId]);
 
   useEffect(() => {
+    // console.log('user',user);
     if (!org) {
       return;
     }
@@ -355,6 +356,8 @@ export default function ApplicationHome() {
     };
   }
 
+
+
   return (
     <DivStyled>
       <Layout
@@ -411,6 +414,9 @@ export default function ApplicationHome() {
           //       style: { marginTop: "8px" },
           //     }
           //   : { items: [] },
+
+
+
           {
             items: [
               {

@@ -95,7 +95,7 @@ export default function ResetPasswordComponent() {
         // inputCode: verificationCode,
       });
       if (response.status == 200) {
-        await messageInstance.success('密码重置成功')
+        await messageInstance.success(trans('userAuth.resetPasswordProsperity '))
       } 
       return Promise.resolve(response);
 
@@ -116,11 +116,11 @@ useEffect(()=>{
 },[])
 
   const { onSubmit, loading } = useAuthSubmit(handleResetPassword, false, redirectUrl);
-
+//重置密码页面
   return (
     <>
       <AuthContainer>
-        <LoginCardTitle>重置密码</LoginCardTitle>
+        <LoginCardTitle>{trans('userAuth.resetPassword ')}</LoginCardTitle>
         <EmailReset>
           <FormInput
             Value={name}

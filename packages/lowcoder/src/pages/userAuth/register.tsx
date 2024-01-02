@@ -120,7 +120,7 @@ function UserRegister() {
   
   const sendRegisterButton = async () => {
     if (!checkEmailValid(account)) {
-      messageInstance.error('请输入合法的邮箱')
+      messageInstance.error(trans("userAuth.inputValidEmail"))
       return;
     }
     try {
@@ -128,22 +128,22 @@ function UserRegister() {
       const response = await UserApi.sendRegisterMail({ name: account });
      
       if (response.status === 200) {
-        messageInstance.success('邮件发送成功，验证码有效期五分钟')
+        messageInstance.success(trans('userAuth.emailSucceeIndate'))
        let timer=setTimeout(()=>{
           setaCtivity(false)
-          console.log('注册里的定时器');
+          // console.log('注册里的定时器');
           
         },60000)
         setaCtivity(true)
         // alert("邮件发送成功，请去邮件查看您的验证码五分钟过期！");
 
       } else {
-        messageInstance.error('邮件发送失败')
+        messageInstance.error(trans('userAuth.emailSendFail'))
         // alert('Email sent failed!');
       }
     } catch (error) {
       if (error.response && error.response.status === 500) {
-        messageInstance.error('邮件发送失败，请检查网络')
+        messageInstance.error(trans('userAuth.emailSendFailBusy'))
         // alert('Email sent failed!');
       } else {
         console.error('Email sent failed!', error);
@@ -189,7 +189,7 @@ function UserRegister() {
 
   const registerHeading = trans("userAuth.register") // REACT_APP_LOWCODER_CUSTOM_AUTH_WELCOME_TEXT !== "" ? REACT_APP_LOWCODER_CUSTOM_AUTH_WELCOME_TEXT : trans("userAuth.register")
   const registerSubHeading = '' // REACT_APP_LOWCODER_CUSTOM_AUTH_WELCOME_TEXT !== "" ? trans("userAuth.poweredByLowcoder") : ''
-
+//注册页面
   return (
     <AuthContainer
       // heading={registerHeading}
