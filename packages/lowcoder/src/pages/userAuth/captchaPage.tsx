@@ -8,7 +8,7 @@ import { AUTH_LOGIN_URL } from "constants/routesURL";
 import { useLocation } from "react-router-dom";
 import { AuthContext, useAuthSubmit } from "pages/userAuth/authUtils";
 import defaultImage from 'assets/images/errorImg(2).png'
-import { MailOutlined,EditOutlined } from '@ant-design/icons'
+import { MailOutlined, EditOutlined } from '@ant-design/icons'
 import {
   AUTH_RESETPASSWORD_URL
 } from "constants/routesURL";
@@ -20,6 +20,7 @@ import {
   AuthContainer,
 } from "pages/userAuth/authComponents";
 import { messageInstance } from "lowcoder-design";
+import { Input } from "antd";
 const H2Style = styled.div`
    font-weight: 600;
   font-size: 28px;
@@ -101,9 +102,14 @@ const RegisterContent = styled(FormWrapperMobile)`
 `;
 const StyledImageContainer = styled.img`
 /* border: 1px solid #d9d6d6; */
-width: 130px;
-height: 40px;
+width: 120px;
+/* height: 40px; */
 
+`
+const GetCodeInput = styled(Input)`
+  width: 200px;
+  margin-bottom: 16px;
+  align-items: stretch;
 `
 
 export default function CaptchaComponent() {
@@ -112,7 +118,7 @@ export default function CaptchaComponent() {
   const [imageUrl, setImageUrl] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [ isactivity,setActivity]=useState(false)
+  const [isactivity, setActivity] = useState(false)
   const location = useLocation();
   // const redirectUrl = AUTH_RESETPASSWORD_URL;
   const redirectUrl = '';
@@ -132,24 +138,24 @@ export default function CaptchaComponent() {
     const timer = setInterval(() => {
       fetchCaptchaImage();
       console.log('Hello World!');
-    },300000);
-    return ()=>{
+    }, 300000);
+    return () => {
       clearInterval(timer)
     }
-  },[]);
+  }, []);
 
   const fetchCaptchaImage = async () => {
     try {
       const response = await UserApi.getCaptchaRandom();
 
 
-  
+
       const imageUrlResponse = await UserApi.getCaptchaImage(response.data);
 
-     
+
       if (imageUrlResponse.status === 200) {
         setImageUrl(imageUrlResponse.data);
-       
+
       }
     } catch (error) {
       console.error('Error fetching captcha image:', error);
@@ -191,19 +197,19 @@ export default function CaptchaComponent() {
     try {
       const response = await UserApi.sendResetPasswordEmail({ name: name, inputCode: inputCode });
       if (response.status === 200) {
-        localStorage.setItem('emailName',name)
-        messageInstance.success('发送邮件成功，请注意查收')
+        localStorage.setItem('emailName', name)
+        messageInstance.success(trans('userAuth.emailSucceedSebd'))
         setActivity(true)
-        
+
         // Enable registration button here
       } else {
-        messageInstance.error('验证码输入错误')
+        messageInstance.error(trans('userAuth.errorCode'))
       }
     } catch (error) {
       if (error.response && error.response.status === 500) {
-        messageInstance.error('验证失败!')
+        messageInstance.error(trans('userAuth.verifyLose'))
       } else {
-        console.error('验证失败!', error);
+        // console.error('验证失败!', error);
       }
     }
 
@@ -215,11 +221,11 @@ export default function CaptchaComponent() {
     // target.src='https://img0.baidu.com/it/u=2570981049,4015989895&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=400'
     target.src = defaultImage
   }
+  //重置密码页面
   return (
     <>
-
       <AuthContainer title={trans('userAuth.forgetPassword')} type="large">
-      <LoginCardTitle>{trans("userAuth.resetPassword")}</LoginCardTitle>
+        <LoginCardTitle>{trans("userAuth.resetPassword")}</LoginCardTitle>
         <RegisterContent>
           <StyledFormInput
             prefix={<MailOutlined />}
@@ -232,28 +238,29 @@ export default function CaptchaComponent() {
               errorMsg: trans("userAuth.inputValidEmail"),
             }}
           />
-          
-          <StyledFormInput
-            prefix={<EditOutlined />}
-            className="form-input"
-            label={trans('userAuth.imageCaptcha')}
-            onChange={(value, valid) =>setVerificationCode(valid ? value : "") }
-            placeholder={trans('userAuth.retrievePasswordCode')}
-          />
-          <div style={{display:'flex'}}>
-          <StyledImageContainer onError={handleImageError} src={imageUrl} alt={trans('userAuth.captchaImage')} />
-          <StyledRouteLinkLogin to={{ pathname: AUTH_LOGIN_URL, state: location.state }}>{trans("userAuth.userLogin")}</StyledRouteLinkLogin>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <GetCodeInput
+              prefix={<EditOutlined />}
+              className="form-input"
+              label={trans('userAuth.imageCaptcha')}
+              onChange={(value, valid) => setVerificationCode(valid ? value : "")}
+              placeholder={trans('userAuth.retrievePasswordCode')}
+            />
+             <StyledImageContainer onError={handleImageError} src={imageUrl} alt={trans('userAuth.captchaImage')} />
           </div>
-          
+          <div>
+            <StyledRouteLinkLogin to={{ pathname: AUTH_LOGIN_URL, state: location.state }}>{trans("userAuth.userLogin")}</StyledRouteLinkLogin>
+          </div>
+
           <NewButton
-            loading={loading} 
+            loading={loading}
             // disabled={!name || !inputCode || inputCode.length !== 6}
-            disabled={inputCode.length!==6 || isactivity}
+            disabled={inputCode.length !== 6 || isactivity}
             onClick={submitEmial}
           >
             {trans("userAuth.sendEmail")}
           </NewButton>
-          
+
         </RegisterContent>
       </AuthContainer>
     </>

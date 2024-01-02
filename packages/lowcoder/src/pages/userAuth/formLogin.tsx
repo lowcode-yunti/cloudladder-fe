@@ -121,7 +121,7 @@ export default function FormLogin(props: FormLoginProps) {
           />
         )}
         <Link to={{ pathname: AUTH_REGISTER_URL, state: location.state }}>
-        <RegisterButton>注册</RegisterButton>
+        <RegisterButton>{trans("userAuth.register")}</RegisterButton>
         </Link>
        
         {/* <label>

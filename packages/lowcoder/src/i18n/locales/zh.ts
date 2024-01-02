@@ -1945,6 +1945,13 @@ export const zh = {
     editorMode_both: "两者",
   },
   userAuth: {
+    resetPasswordProsperity:'密码重置成功',
+    emailSendFailBusy:"邮件发送失败，请检查网络",
+    emailSendFail:"邮件发送失败",
+    emailSucceeIndate:"邮件发送成功，验证码有效期五分钟",
+    verifyLose:"验证失败",
+    errorCode:'验证码输入错误',
+    emailSucceedSebd:'发送邮件成功，请注意查收',
     registerByEmail: "通过电子邮件注册",
     email: "电子邮件:",
     inputEmail: "请输入电子邮箱...",

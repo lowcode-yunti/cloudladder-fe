@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CSSProperties, ReactNode } from "react";
+import { CSSProperties, ReactNode,useEffect } from "react";
 import { SideBarItem, SideBarItemProps } from "./SideBarItem";
 import styled from "styled-components";
 import { CNSidebarSection } from "../../constants/styleSelectors";
@@ -24,7 +24,18 @@ export const SideBarSection = (props: SideBarSectionProps) => {
   const user = useSelector<AppState, User>(getUser);
   const applications = useSelector<AppState, ApplicationMeta[]>(normalAppListSelector);
   const currentPath = useLocation().pathname;
-
+  useEffect(()=>{
+   let aa= props.items.filter((item) =>item.visible ? item.visible({ user: user, applications: applications }) : true)
+  //  console.log('aa',aa);
+  //  console.log('sid',props);
+   
+    
+  //  console.log('SideBarSection',props.items);
+  //  console.log('asd',props.items[1].visible);
+  //  console.log('ca',applications);
+   
+    
+  },[])
   return (
     <Wrapper className={CNSidebarSection} style={props.style}>
       {props.title}
