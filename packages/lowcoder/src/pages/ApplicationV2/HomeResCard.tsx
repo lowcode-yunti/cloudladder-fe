@@ -163,7 +163,7 @@ export function HomeResCard(props: { res: HomeRes; onMove: (res: HomeRes) => voi
     <Wrapper>
       <Card>
         {Icon && (
-          <Icon width={"24px"} height={"24px"} style={{ marginRight: "10px", flexShrink: 0 }} />
+          <Icon width={"30px"} height={"30px"} style={{ marginRight: "10px", flexShrink: 0 }} />
         )}
         <CardInfo
           onClick={(e) => {
