@@ -302,16 +302,16 @@ export default function Header(props: HeaderProps) {
 
   const isModule = appType === AppTypeEnum.Module;
 
-  const editorModeOptions = [
-    { label: trans("header.editorMode_layout"), key: "editorModeSelector_layout", value: "layout" },
-    { label: trans("header.editorMode_logic"), key: "editorModeSelector_logic", value: "logic" },
-    { label: trans("header.editorMode_both"), key: "editorModeSelector_both", value: "both" },
-  ];
+  // const editorModeOptions = [
+  //   { label: trans("header.editorMode_layout"), key: "editorModeSelector_layout", value: "layout" },
+  //   { label: trans("header.editorMode_logic"), key: "editorModeSelector_logic", value: "logic" },
+  //   { label: trans("header.editorMode_both"), key: "editorModeSelector_both", value: "both" },
+  // ];
   
-  const onEditorStateValueChange = ({ target: { value } }: RadioChangeEvent) => {
-    toggleEditorModeStatus(value);
-    editorState.setEditorModeStatus(value);
-  };
+  // const onEditorStateValueChange = ({ target: { value } }: RadioChangeEvent) => {
+  //   toggleEditorModeStatus(value);
+  //   editorState.setEditorModeStatus(value);
+  // };
   
   const headerStart = (
     <>
@@ -353,13 +353,13 @@ export default function Header(props: HeaderProps) {
 
   const headerMiddle = (
     <> 
-      <Radio.Group onChange={onEditorStateValueChange} value={props.editorModeStatus} optionType="button" buttonStyle="solid" size="small">
-        {editorModeOptions.map((option) => (
+      {/* <Radio.Group onChange={onEditorStateValueChange} value={props.editorModeStatus} optionType="button" buttonStyle="solid" size="small"> */}
+        {/* {editorModeOptions.map((option) => (
           <Radio.Button key={option.key} value={option.value}>
             {option.label}
           </Radio.Button>
-        ))}
-      </Radio.Group>
+        ))} */}
+      {/* </Radio.Group> */}
       <IconRadius>
         <LeftIcon onClick={() => togglePanel("left")} $show={left} />
       </IconRadius>

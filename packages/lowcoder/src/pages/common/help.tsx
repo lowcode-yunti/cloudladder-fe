@@ -424,7 +424,7 @@ export function HelpDropdown(props: HelpDropdownProps) {
       {props.showShortcutList && props.setShowShortcutList && (
         <ShortcutListPopup setShowShortcutList={props.setShowShortcutList} />
       )}
-      <Dropdown
+      {/* <Dropdown
         dropdownRender={() => overlayMenus}
         placement="topRight"
         trigger={["click"]}
@@ -440,7 +440,7 @@ export function HelpDropdown(props: HelpDropdownProps) {
             <HelpIcon />
           </HelpDiv>
         )}
-      </Dropdown>
+      </Dropdown> */}
     </HelpWrapper>
   </>);
 }

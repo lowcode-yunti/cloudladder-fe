@@ -56,6 +56,6 @@ export const zh = {
     emptyList: "无选项",
   },
   container: {
-    hintPlaceHolder: "从右侧面板拖动组件",
+    hintPlaceHolder: "从左侧面板拖动组件",
   },
 };
