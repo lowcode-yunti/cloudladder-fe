@@ -110,7 +110,7 @@
   },
   "scripts": {
     "supportedBrowsers": "yarn dlx browserslist-useragent-regexp --allowHigherVersions '>0.2%,not dead,not op_mini all,chrome >=69'",
-    "start": "LOWCODER_API_SERVICE_URL=https://experimental.cloudladder.net.cn REACT_APP_LOG_LEVEL=debug REACT_APP_ENV=local vite",
+    "start": "LOWCODER_API_SERVICE_URL=http://192.168.31.109:8080/ REACT_APP_LOG_LEVEL=debug REACT_APP_ENV=local vite",
     "build": "vite build && cp ../../VERSION ./build/VERSION",
     "preview": "vite preview",
     "prepare": "husky install"

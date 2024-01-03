@@ -50,8 +50,8 @@ const StyledLink = styled.a`
 `;
 
 const LogoIcon = styled(Logo)`
-  min-width: 24px;
-  max-width: 24px;
+   min-width: 24px; 
+   /* max-width: 24px;  */
 `;
 
 const IconCss = css<{ $show: boolean }>`

@@ -13,7 +13,7 @@ const Wrapper = styled.div`
 
   h2 {
     font-weight: 500;
-    font-size: 20px;
+    font-size: 14px;
     color: #222222;
     margin: 0 0 20px 20px;
   }

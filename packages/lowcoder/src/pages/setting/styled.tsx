@@ -21,7 +21,7 @@ export const Level1SettingPageContentWithList = styled(Level1SettingPageContent)
 `;
 
 export const Level1SettingPageTitle = styled.div`
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 500;
   color: #222;
   line-height: 1;
