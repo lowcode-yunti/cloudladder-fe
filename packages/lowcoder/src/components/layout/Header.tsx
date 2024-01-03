@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { CSSProperties, ReactNode } from "react";
 import { CNSiteHeader } from "constants/styleSelectors";
 import { TopHeaderHeight } from "constants/style";
-
 const HeaderWrapper = styled.header<IHeaderProps>`
   display: flex;
   width: 100%;
@@ -43,7 +42,6 @@ export interface IHeaderProps {
   headerEnd?: ReactNode;
   isEditViewPreview?: boolean;
 }
-
 export default function Header(props: IHeaderProps) {
   const { headerStart, headerMiddle, headerEnd } = props;
   const regex = /\/edit|\/view|\/preview/;
