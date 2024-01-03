@@ -70,7 +70,7 @@ const CreateMenuItem = styled.div`
 `;
 
 const CreateBtn = styled(TacoButton)`
-  width: 96px;
+  width: 100px;
   height: 32px;
   padding: 0;
   margin-left: 12px;

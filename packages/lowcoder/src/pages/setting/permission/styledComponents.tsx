@@ -282,8 +282,9 @@ export const OperationWrapper = styled.div`
 export const EditBtn = styled(TacoButton)`
   opacity: 0;
   min-width: 52px;
-  height: 24px;
+  height: 32px;
   margin-right: 52px;
+  width:100px;
 `;
 
 export const PopoverIcon = styled(PointIcon)`

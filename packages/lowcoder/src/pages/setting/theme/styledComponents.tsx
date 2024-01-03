@@ -27,6 +27,7 @@ export const CreateButton = styled(Button)`
   background-color: #4965f2;
   display: flex;
   align-items: center;
+  width:100px;
   justify-content: center;
   padding: 4px 8px;
   font-size: 13px;
