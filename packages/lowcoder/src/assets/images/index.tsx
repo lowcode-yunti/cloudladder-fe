@@ -5,7 +5,6 @@ import { ReactComponent as LogoHomeIcon } from "./logo-with-name-home.svg";
 import {ReactComponent as  Logoaaa} from './logos-logo.svg'
 export { default as favicon } from "./favicon.ico";
 
-
 export const Logo = (props: { branding?: boolean }) => {
   return <Logoaaa />;
 };
