@@ -118,7 +118,7 @@ const IconRadius = styled.div<{ disabled?: boolean }>`
 
 const PreviewBtn = styled(TacoButton)`
   padding: 4px 12px;
-  height: 30px;
+  height: 32px;
   background: #4965f2;
   border-radius: 4px 0 0 4px;
   width: 100px;
@@ -154,7 +154,7 @@ const GrayBtn = styled(TacoButton)`
     color: #ffffff;
     background: #8b8fa34c;
     border: none;
-    height: 30px;
+    height: 32px;
     padding: 4px 13px;
     margin-right: 8px;
     cursor: pointer;
@@ -197,8 +197,8 @@ const PackUpIconStyled = styled(PackUpIcon)`
 
 const PackUpBtn = styled(TacoButton)`
   padding: 0;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: 0 4px 4px 0;
   margin-right: 24px;
   margin-left: 1px;
