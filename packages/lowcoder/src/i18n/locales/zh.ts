@@ -1468,7 +1468,7 @@ export const zh = {
     iconPosition: "图标位置",
   },
   formComp: {
-    containerPlaceholder: "从右侧窗格拖动组件或",
+    containerPlaceholder: "从左侧窗格拖动组件或",
     openDialogButton: "从数据生成表单",
     resetAfterSubmit: "成功提交后重置",
     initialData: "初始数据",

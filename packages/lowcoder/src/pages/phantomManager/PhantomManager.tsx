@@ -29,7 +29,8 @@ export const PhantomManager: FC = () => {
       <iframe
         className={classes.iframe}
        // src="https://phantom-agent-dev.cloudladder.net.cn/"
-       src="http://192.168.31.109:3005/"
+      //  src="http://192.168.31.109:3005/"
+      src="http://localhost:3005/"
         onLoad={() => setLoading(false)}
       />
       {loading && (

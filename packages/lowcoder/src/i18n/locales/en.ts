@@ -1612,7 +1612,7 @@ export const en = {
     "iconPosition": "Icon Position"
   },
   "formComp": {
-    "containerPlaceholder": "Drag Components from the Right Pane or",
+    "containerPlaceholder": "Drag Components from the Left Pane or",
     "openDialogButton": "Generate a Form from one of your Data Sources",
     "resetAfterSubmit": "Reset After Successful Submit",
     "initialData": "Initial Data",
