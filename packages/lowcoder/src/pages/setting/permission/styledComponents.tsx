@@ -195,7 +195,7 @@ export const RoleSelectTitle = styled.div`
 export const AddMemberButton = styled(TacoButton)`
   height: 32px;
   padding: 8px 12px;
-
+  width: 100px;
   svg {
     height: 16px;
     width: 16px;
