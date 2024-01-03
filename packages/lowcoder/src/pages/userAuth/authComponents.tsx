@@ -9,11 +9,12 @@ import { trans } from "i18n";
 import defaultImage from 'assets/images/loginPosterImg.png'
 const AuthCardContainer = styled.div`
   /* display: flex;
-  flex-direction: column;
+   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  height: 100%; */
-  background-size: 100% 100%;
+  height: 100%;  
+  flex-direction: column; */
+  /* background-size: 100% 100%; */
   position: absolute;
   top: 16vh;
   left: 56vw;
@@ -125,6 +126,20 @@ const StyledConfirmButton = styled(TacoButton)`
   margin-top: 8px;
   transition: unset;
 `;
+const FooterDiv = styled.div`
+text-align: center;
+line-height: 40px;
+width: calc(100% - 550px);
+height: 40px;
+background: #f8f8f8;
+color:#6f6f6f;
+position: absolute;
+right: 0px;
+bottom: 0px;
+a{
+  color: #6f6f6f;
+}
+`
 
 export const AuthContainer = (props: {
   children: any;
@@ -134,14 +149,14 @@ export const AuthContainer = (props: {
 }) => {
   return (
     <>
-     <img  style={{width:'550px',height:'100vh'}} src={defaultImage} alt="" />
-    <AuthCardContainer>
-      {/* <AuthCardTitle type={props.type}>{props.title || ""}</AuthCardTitle> */}
-
-      <AuthCardHeading type={props.type}>{props.heading || ""}</AuthCardHeading>
-      { props.subHeading && (<AuthCardSubHeading>{props.subHeading}</AuthCardSubHeading>)}
-      <AuthCard>{props.children}</AuthCard>
-    </AuthCardContainer>
+      <img style={{ width: '550px', height: '100vh' }} src={defaultImage} alt="" />
+      <AuthCardContainer>
+        {/* <AuthCardTitle type={props.type}>{props.title || ""}</AuthCardTitle> */}
+        <AuthCardHeading type={props.type}>{props.heading || ""}</AuthCardHeading>
+        {props.subHeading && (<AuthCardSubHeading>{props.subHeading}</AuthCardSubHeading>)}
+        <AuthCard>{props.children}</AuthCard>
+      </AuthCardContainer>
+      <FooterDiv>网站名称:北京尚云数智科技有限公司 网站备案号: <a target="_blank" href="https://beian.miit.gov.cn/">京ICP备2023016875号-1</a> </FooterDiv>
     </>
   );
 };

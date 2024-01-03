@@ -13,7 +13,7 @@ const HeaderWrapper = styled.header<IHeaderProps>`
   justify-content: space-between;
 
   > div:nth-of-type(1) svg {
-    max-width: ${(props) => props.isEditViewPreview && "24px"};
+    /* max-width: ${(props) => props.isEditViewPreview && "24px"}; */
   }
 `;
 

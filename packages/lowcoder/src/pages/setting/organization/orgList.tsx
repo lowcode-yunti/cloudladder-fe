@@ -123,6 +123,10 @@ type DataItemInfo = {
   orgName: string;
   logoUrl: string;
 };
+const CreateWorkButton=styled(CreateButton)`
+  width: 155px;
+  height:32px;
+`
 
 function OrganizationSetting() {
   const user = useSelector(getUser);
@@ -146,14 +150,14 @@ function OrganizationSetting() {
       <Level1SettingPageTitleWithBtn>
         {trans("settings.organization")}
         {isSaasMode(sysConfig) && (
-          <CreateButton
+          <CreateWorkButton
             loading={orgCreateStatus === "requesting"}
             buttonType={"primary"}
             icon={<AddIcon />}
             onClick={() => dispatch(createOrgAction(orgs))}
           >
             {trans("orgSettings.createOrg")}
-          </CreateButton>
+          </CreateWorkButton>
         )}
       </Level1SettingPageTitleWithBtn>
       <div>
