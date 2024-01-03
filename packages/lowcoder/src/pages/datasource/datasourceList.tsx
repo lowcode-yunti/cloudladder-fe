@@ -43,6 +43,7 @@ const AddBtn = styled(TacoButton)`
   min-width: 96px;
   width: fit-content;
   height: 32px;
+  width:100px;
 `;
 
 const EditBtn = styled(TacoButton)`
