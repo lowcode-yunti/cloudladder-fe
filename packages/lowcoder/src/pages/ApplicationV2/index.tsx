@@ -432,7 +432,7 @@ export default function ApplicationHome() {
                 visible: ({ user }) => user.orgDev,
               },
               {
-                text: <TabLabel>流程管理</TabLabel>,
+                text: <TabLabel>工作流</TabLabel>,
                 routePath: FLOW_MANAGER_URL,
                 routeComp: FlowManager,
                 icon: ({ selected, ...otherProps }) =>
