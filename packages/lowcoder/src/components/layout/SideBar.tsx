@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import { AppState } from "../../redux/reducers";
 import { ApplicationMeta } from "../../constants/applicationConstants";
 import { normalAppListSelector } from "../../redux/selectors/applicationSelector";
-
+import {useState} from 'react'
 const Sider = styled(Layout.Sider)`
   /* height: calc(100vh - ${TopHeaderHeight}); */
 
@@ -79,16 +79,20 @@ export default function SideBar(props:any) {
       routepath: item.routePath
     }
   })
+  // console.log(data);
   let history = useHistory() //获取路由信息
-
-  const newpathname = history.location.pathname
+  let [numKey,setnumKey]=useState( history.location.pathname)
+ 
+  // const newpathname = history.location.pathname
+  
   const clickItme = (event) => {
+    setnumKey(event.key)
     history.push(event.item.props.routepath)
   }
   return (
     <Sider collapsedWidth='48' width='150' collapsible >
       {/* <InviteDialog trigger={<InviteUser><InviteUserIcon style={{ marginRight: "8px" }} />{trans("home.inviteUser")}</InviteUser>} style={{ marginLeft: "auto" }}/> */}
-      <Menu theme="dark" selectedKeys={[newpathname]} onSelect={clickItme} defaultSelectedKeys={['/apps']} items={data}>
+      <Menu theme="dark" selectedKeys={[numKey]} onSelect={clickItme} defaultSelectedKeys={['/apps']} items={data}>
       </Menu>
     </Sider>
   )

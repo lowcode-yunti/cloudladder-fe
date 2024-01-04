@@ -251,7 +251,7 @@ export const QuestionTooltip = (props: { title: string }) => {
 };
 
 export const HeaderBack = styled.div`
-  font-size: 20px;
+  font-size: 14px;
   height: 20px;
   display: flex;
   align-items: center;
@@ -265,7 +265,7 @@ export const HeaderBack = styled.div`
   > div {
     color: #222222;
     font-weight: 500;
-    font-size: 20px;
+    /* font-size: 14px; */
   }
 
   > svg {

@@ -100,15 +100,15 @@ const SiderWrapper = styled.div`
         padding: 5px;
       }
 
-      // &.ant-menu-item-selected,
-      // &:hover,
-      // &:active {
-      //   background-color: #393b47;
+       &.ant-menu-item-selected,
+       &:hover,
+       &:active {
+         /* background-color: #233edb; */
 
      
-      // }
+       }
       svg {
-        // background: #8b8fa37f;
+         /* background: #8b8fa37f; */
         border-radius: 4px;
       }
     }
