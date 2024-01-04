@@ -111,7 +111,7 @@ export const zh = {
     collapseTip: "点击折叠 {component} 的数据",
   },
   bottomPanel: {
-    title: "查询",
+    title: "方法",
     run: "运行",
     noSelectedQuery: "未选择查询",
     metaData: "元数据",
@@ -428,7 +428,7 @@ export const zh = {
     showConfirmationModal: "运行前显示确认对话框",
     confirmationMessageLabel: "确认消息",
     confirmationMessage: "您确定要运行此查询吗?",
-    newQuery: "新建查询",
+    newQuery: "新建方法",
     newFolder: "新建文件夹",
     recentlyUsed: "最近使用",
     folder: "文件夹",

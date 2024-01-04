@@ -196,10 +196,12 @@ const items = [
     key: SiderKey.Widgets,
     icon: <InsertIcon />,
   },
+
   {
     key: SiderKey.State,
     icon: <LeftStateIcon />,
   },
+
   {
     key: SiderKey.Setting,
     icon: <LeftSettingIcon />,
@@ -220,7 +222,7 @@ function EditorView(props: EditorViewProps) {
     () => setShowShortcutList(!showShortcutList),
     [showShortcutList]
   );
-  const [menuKey, setMenuKey] = useState<string>(SiderKey.State);
+  const [menuKey, setMenuKey] = useState<string>(SiderKey.Widgets);
   const [height, setHeight] = useState<number>();
   const dispatch = useDispatch();
 
@@ -361,7 +363,7 @@ function EditorView(props: EditorViewProps) {
               <Menu
                 theme="dark"
                 mode="inline"
-                defaultSelectedKeys={[SiderKey.State]}
+                defaultSelectedKeys={[SiderKey.Widgets]}
                 selectedKeys={panelStatus.left ? [menuKey] : [""]}
                 items={items.filter((item) => {
                   if (item.key !== SiderKey.Widgets) return true;

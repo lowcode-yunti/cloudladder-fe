@@ -41,7 +41,7 @@ import { AppPermissionDialog } from "../../components/PermissionDialog/AppPermis
 import { getBrandingConfig } from "../../redux/selectors/configSelectors";
 import { messageInstance } from "lowcoder-design";
 import { EditorContext } from  "../../comps/editorState";
-
+import logoaa from 'assets/images/logoaa.png'
 
 const StyledLink = styled.a`
   display: flex;
@@ -226,7 +226,7 @@ const DropdownStyled = styled(Dropdown)`
 
 const DropdownMenuStyled = styled(DropdownMenu)`
   .ant-dropdown-menu-item:hover {
-    background: #edf4fa;
+    background: #3a1ef0;
   }
 `;
 
@@ -317,7 +317,8 @@ export default function Header(props: HeaderProps) {
     <>
       <StyledLink onClick={() => history.push(ALL_APPLICATIONS_URL)}>
         {/* {REACT_APP_LOWCODER_SHOW_BRAND === 'true' ? REACT_APP_LOWCODER_CUSTOM_LOGO_SQUARE !== "" ? <img src={REACT_APP_LOWCODER_CUSTOM_LOGO_SQUARE } height={24} width={24} alt="logo" /> :<LogoIcon /> :  <LogoHome />} */}
-        <LogoHome />
+        <img style={{width:'30px',height:'30px'}} src={logoaa} alt="" />
+        {/* <LogoHome /> */}
       </StyledLink>
       {editName ? (
         <Wrapper>
@@ -469,7 +470,11 @@ export function AppHeader() {
   const headerStart = (
     <StyledLink onClick={() => history.push(ALL_APPLICATIONS_URL)}>
       {/* {REACT_APP_LOWCODER_SHOW_BRAND === 'true' ?  REACT_APP_LOWCODER_CUSTOM_LOGO !== "" ? <img src={REACT_APP_LOWCODER_CUSTOM_LOGO}  height={28} alt="logo" /> :<LogoWithName branding={!user.orgDev} /> : <LogoHome />} */}
-      <LogoHome />
+     <div>
+     <img style={{width:'40px',height:'40px'}} src={logoaa} alt="" />
+     <span style={{fontSize:'20PX',marginLeft:'5px',fontFamily:'monospace',color:'#3377FF'}}>Cloudladder</span>
+     </div>
+      {/* <LogoHome /> */}
     </StyledLink>
   );
   const headerEnd = <HeaderProfile user={user} />;

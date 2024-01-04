@@ -7,6 +7,7 @@ import ReactHotkeys from "util/hotkeys";
 import { StyledLink } from "pages/common/styledComponent";
 import { trans } from "i18n";
 import defaultImage from 'assets/images/loginPosterImg.png'
+import logoaa from 'assets/images/logoaa.png'
 const AuthCardContainer = styled.div`
   /* display: flex;
    flex-direction: column;
@@ -140,6 +141,22 @@ a{
   color: #6f6f6f;
 }
 `
+const LogoDiv=styled.div`
+  position: absolute;
+  top:10px;
+  left:560px;
+  img{
+    width: 40px;
+    height: 40px;
+  }
+  span{
+    font-size: 20px;
+    line-height: 40px;
+    margin-left: 10px;
+    font-weight: 700;
+    font-family: 'Courier New', Courier, monospace;
+  }
+`
 
 export const AuthContainer = (props: {
   children: any;
@@ -156,6 +173,10 @@ export const AuthContainer = (props: {
         {props.subHeading && (<AuthCardSubHeading>{props.subHeading}</AuthCardSubHeading>)}
         <AuthCard>{props.children}</AuthCard>
       </AuthCardContainer>
+      <LogoDiv>
+        <img src={logoaa} alt="" />
+        <span>Cloudladder</span>
+      </LogoDiv>
       <FooterDiv>网站名称:北京尚云数智科技有限公司 网站备案号: <a target="_blank" href="https://beian.miit.gov.cn/">京ICP备2023016875号-1</a> </FooterDiv>
     </>
   );
