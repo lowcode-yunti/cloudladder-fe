@@ -53,6 +53,7 @@ const SaveButton = styled(TacoButton)`
   padding: 4px 8px;
   min-width: 84px;
   height: 32px;
+  width:100px
 `;
 
 const CustomSelectStyle = styled(CustomSelect)`

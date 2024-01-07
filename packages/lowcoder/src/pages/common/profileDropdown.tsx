@@ -49,7 +49,6 @@ const InviteUser = styled.div`
   } */
 `;
 
-
 const ProfileWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -210,6 +209,7 @@ export default function ProfileDropdown(props: DropDownProps) {
       ),
     },
     {
+
       key:'inviteUser',
       label:(<InviteDialog trigger={<InviteUser>{trans("home.inviteUser")}</InviteUser>} style={{ marginLeft: "auto" }}/>)
     },

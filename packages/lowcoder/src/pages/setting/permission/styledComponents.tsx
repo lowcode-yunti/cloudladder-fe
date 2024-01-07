@@ -195,7 +195,7 @@ export const RoleSelectTitle = styled.div`
 export const AddMemberButton = styled(TacoButton)`
   height: 32px;
   padding: 8px 12px;
-
+  width: 100px;
   svg {
     height: 16px;
     width: 16px;
@@ -251,7 +251,7 @@ export const QuestionTooltip = (props: { title: string }) => {
 };
 
 export const HeaderBack = styled.div`
-  font-size: 20px;
+  font-size: 14px;
   height: 20px;
   display: flex;
   align-items: center;
@@ -265,7 +265,7 @@ export const HeaderBack = styled.div`
   > div {
     color: #222222;
     font-weight: 500;
-    font-size: 20px;
+    /* font-size: 14px; */
   }
 
   > svg {
@@ -282,8 +282,9 @@ export const OperationWrapper = styled.div`
 export const EditBtn = styled(TacoButton)`
   opacity: 0;
   min-width: 52px;
-  height: 24px;
+  height: 32px;
   margin-right: 52px;
+  width:100px;
 `;
 
 export const PopoverIcon = styled(PointIcon)`

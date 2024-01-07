@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CSSProperties, ReactNode } from "react";
+import { CSSProperties, ReactNode,useEffect } from "react";
 import { SideBarItem, SideBarItemProps } from "./SideBarItem";
 import styled from "styled-components";
 import { CNSidebarSection } from "../../constants/styleSelectors";

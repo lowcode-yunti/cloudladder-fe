@@ -68,7 +68,7 @@ const ContentWrapper = styled.div`
 `;
 
 const Breadcrumb = styled(AntdBreadcrumb)`
-  font-size: 20px;
+  font-size: 14px;
 
   li:not(:last-child) {
     color: #8b8fa3;

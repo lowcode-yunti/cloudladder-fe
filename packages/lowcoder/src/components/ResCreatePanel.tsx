@@ -66,7 +66,8 @@ const Title = styled.div<{ shadow: boolean; placement: PageType }>`
 
   ${(props) => (props.shadow ? `box-shadow: ${BottomShadow};` : "")}
   .title-text {
-    font-size: ${(props) => (props.placement === "editor" ? 16 : 18)}px;
+    /* font-size: ${(props) => (props.placement === "editor" ? 16 : 18)}px; */
+    font-size:14px;
     font-weight: 500;
   }
 

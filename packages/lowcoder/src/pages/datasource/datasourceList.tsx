@@ -33,7 +33,7 @@ const HeaderWrapper = styled.div`
 
 const Title = styled.div`
   font-weight: 500;
-  font-size: 18px;
+  font-size: 14px;
   color: #222222;
   line-height: 18px;
   flex-grow: 1;
@@ -43,6 +43,7 @@ const AddBtn = styled(TacoButton)`
   min-width: 96px;
   width: fit-content;
   height: 32px;
+  width:100px;
 `;
 
 const EditBtn = styled(TacoButton)`

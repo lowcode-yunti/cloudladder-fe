@@ -41,7 +41,7 @@ import { AppPermissionDialog } from "../../components/PermissionDialog/AppPermis
 import { getBrandingConfig } from "../../redux/selectors/configSelectors";
 import { messageInstance } from "lowcoder-design";
 import { EditorContext } from  "../../comps/editorState";
-
+import logoaa from 'assets/images/logoaa.png'
 
 const StyledLink = styled.a`
   display: flex;
@@ -50,8 +50,8 @@ const StyledLink = styled.a`
 `;
 
 const LogoIcon = styled(Logo)`
-  min-width: 24px;
-  max-width: 24px;
+   min-width: 24px; 
+   /* max-width: 24px;  */
 `;
 
 const IconCss = css<{ $show: boolean }>`
@@ -118,7 +118,7 @@ const IconRadius = styled.div<{ disabled?: boolean }>`
 
 const PreviewBtn = styled(TacoButton)`
   padding: 4px 12px;
-  height: 28px;
+  height: 32px;
   background: #4965f2;
   border-radius: 4px 0 0 4px;
   width: 100px;
@@ -150,11 +150,11 @@ const LoginBtn = styled(TacoButton)`
 `;
 const GrayBtn = styled(TacoButton)`
   &&& {
-    width: 118px;
+    width: 100px;
     color: #ffffff;
     background: #8b8fa34c;
     border: none;
-    height: 28px;
+    height: 32px;
     padding: 4px 13px;
     margin-right: 8px;
     cursor: pointer;
@@ -197,8 +197,8 @@ const PackUpIconStyled = styled(PackUpIcon)`
 
 const PackUpBtn = styled(TacoButton)`
   padding: 0;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 0 4px 4px 0;
   margin-right: 24px;
   margin-left: 1px;
@@ -226,7 +226,7 @@ const DropdownStyled = styled(Dropdown)`
 
 const DropdownMenuStyled = styled(DropdownMenu)`
   .ant-dropdown-menu-item:hover {
-    background: #edf4fa;
+    background: #3a1ef0;
   }
 `;
 
@@ -302,22 +302,23 @@ export default function Header(props: HeaderProps) {
 
   const isModule = appType === AppTypeEnum.Module;
 
-  const editorModeOptions = [
-    { label: trans("header.editorMode_layout"), key: "editorModeSelector_layout", value: "layout" },
-    { label: trans("header.editorMode_logic"), key: "editorModeSelector_logic", value: "logic" },
-    { label: trans("header.editorMode_both"), key: "editorModeSelector_both", value: "both" },
-  ];
+  // const editorModeOptions = [
+  //   { label: trans("header.editorMode_layout"), key: "editorModeSelector_layout", value: "layout" },
+  //   { label: trans("header.editorMode_logic"), key: "editorModeSelector_logic", value: "logic" },
+  //   { label: trans("header.editorMode_both"), key: "editorModeSelector_both", value: "both" },
+  // ];
   
-  const onEditorStateValueChange = ({ target: { value } }: RadioChangeEvent) => {
-    toggleEditorModeStatus(value);
-    editorState.setEditorModeStatus(value);
-  };
+  // const onEditorStateValueChange = ({ target: { value } }: RadioChangeEvent) => {
+  //   toggleEditorModeStatus(value);
+  //   editorState.setEditorModeStatus(value);
+  // };
   
   const headerStart = (
     <>
       <StyledLink onClick={() => history.push(ALL_APPLICATIONS_URL)}>
         {/* {REACT_APP_LOWCODER_SHOW_BRAND === 'true' ? REACT_APP_LOWCODER_CUSTOM_LOGO_SQUARE !== "" ? <img src={REACT_APP_LOWCODER_CUSTOM_LOGO_SQUARE } height={24} width={24} alt="logo" /> :<LogoIcon /> :  <LogoHome />} */}
-        <LogoHome />
+        <img style={{width:'30px',height:'30px'}} src={logoaa} alt="" />
+        {/* <LogoHome /> */}
       </StyledLink>
       {editName ? (
         <Wrapper>
@@ -353,13 +354,13 @@ export default function Header(props: HeaderProps) {
 
   const headerMiddle = (
     <> 
-      <Radio.Group onChange={onEditorStateValueChange} value={props.editorModeStatus} optionType="button" buttonStyle="solid" size="small">
-        {editorModeOptions.map((option) => (
+      {/* <Radio.Group onChange={onEditorStateValueChange} value={props.editorModeStatus} optionType="button" buttonStyle="solid" size="small"> */}
+        {/* {editorModeOptions.map((option) => (
           <Radio.Button key={option.key} value={option.value}>
             {option.label}
           </Radio.Button>
-        ))}
-      </Radio.Group>
+        ))} */}
+      {/* </Radio.Group> */}
       <IconRadius>
         <LeftIcon onClick={() => togglePanel("left")} $show={left} />
       </IconRadius>
@@ -469,7 +470,11 @@ export function AppHeader() {
   const headerStart = (
     <StyledLink onClick={() => history.push(ALL_APPLICATIONS_URL)}>
       {/* {REACT_APP_LOWCODER_SHOW_BRAND === 'true' ?  REACT_APP_LOWCODER_CUSTOM_LOGO !== "" ? <img src={REACT_APP_LOWCODER_CUSTOM_LOGO}  height={28} alt="logo" /> :<LogoWithName branding={!user.orgDev} /> : <LogoHome />} */}
-      <LogoHome />
+     <div>
+     <img style={{width:'40px',height:'40px'}} src={logoaa} alt="" />
+     <span style={{fontSize:'20PX',marginLeft:'5px',fontFamily:'monospace',color:'#3377FF'}}>Cloudladder</span>
+     </div>
+      {/* <LogoHome /> */}
     </StyledLink>
   );
   const headerEnd = <HeaderProfile user={user} />;

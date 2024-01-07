@@ -2,6 +2,7 @@ import {
   AllTypesIcon,
   ApplicationDocIcon,
   FolderIcon,
+  NewAppIcon,
   MobileAppIcon,
   ModuleDocIcon,
   NavDocIcon,
@@ -40,7 +41,8 @@ export const HomeResInfo: Record<
   },
   [HomeResTypeEnum.Folder]: {
     name: trans("home.folder"),
-    icon: FolderIcon,
+    // icon: FolderIcon,
+    icon: NewAppIcon,
   },
   [HomeResTypeEnum.MobileTabLayout]: {
     name: trans("home.mobileTabLayout"),

@@ -20,6 +20,7 @@ export const SettingSetting: FC = () => {
         <Form>
           <Form.Item label="OPEN AI KEY">
             <Input.Password
+              visibilityToggle={false}
               value={openAIKey}
               onChange={(e) => setOpenAIKey(e.target.value)}
             />

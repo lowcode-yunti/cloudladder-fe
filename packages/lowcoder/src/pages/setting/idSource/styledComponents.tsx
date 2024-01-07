@@ -306,6 +306,7 @@ export const CreateButton = styled(Button)`
   align-items: center;
   justify-content: center;
   padding: 4px 8px;
+  wight:155px;
   font-size: 13px;
   border: 1px solid #4965f2;
   box-shadow: none;

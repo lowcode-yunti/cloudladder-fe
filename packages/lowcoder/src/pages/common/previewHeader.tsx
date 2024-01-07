@@ -57,11 +57,12 @@ const PreviewBtn = styled(TacoButton)`
     color: #ffffff;
     background: #8b8fa34c;
     border: none;
-    height: 28px;
+    height: 32px;
     margin-right: 8px;
     min-width: 60px;
     padding: 0;
     cursor: pointer;
+    width: 100px;
   
     &:hover {
       background: #666666;
@@ -87,9 +88,10 @@ const EditIcon = styled(TextEditIcon)`
 
 const EditBtn = styled(TacoButton)`
   min-width: 60px;
-  height: 28px;
+  height: 32px;
   margin-right: 24px;
   padding: 0;
+  width: 100px;
 `;
 
 const Wrapper = styled.div`

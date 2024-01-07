@@ -167,9 +167,9 @@ export const IdSourceList = (props: any) => {
           />
         </TableStyled>
 
-        <div style={{ marginTop: 20, marginLeft: 12 }} className="section-title">{trans("advanced.AuthOrgTitle")}</div>
+        {/* <div style={{ marginTop: 20, marginLeft: 12 }} className="section-title">{trans("advanced.AuthOrgTitle")}</div>
         <HelpText style={{ marginBottom: 12, marginLeft: 12 }}>{trans("advanced.AuthOrgDescrition") + ": "}</HelpText>
-        <HelpText style={{ marginBottom: 12, marginLeft: 12 }}><a href={loginUrl} target="blank">{loginUrl}</a></HelpText> 
+        <HelpText style={{ marginBottom: 12, marginLeft: 12 }}><a href={loginUrl} target="blank">{loginUrl}</a></HelpText>  */}
 
       </Level1SettingPageContentWithList>
       <CreateModal

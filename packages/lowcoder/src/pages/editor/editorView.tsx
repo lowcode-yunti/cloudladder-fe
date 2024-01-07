@@ -85,7 +85,7 @@ const ViewBody = styled.div<{ hideBodyHeader?: boolean; height?: number }>`
 
 const SiderWrapper = styled.div`
   .ant-menu {
-    background-color: #393b47;
+    // background-color: #393b47;
     height: calc(100vh - 48px);
 
     .ant-menu-item {
@@ -100,15 +100,16 @@ const SiderWrapper = styled.div`
         padding: 5px;
       }
 
-      &.ant-menu-item-selected,
-      &:hover,
-      &:active {
-        background-color: #393b47;
+       &.ant-menu-item-selected,
+       &:hover,
+       &:active {
+         /* background-color: #233edb; */
 
-        svg {
-          background: #8b8fa37f;
-          border-radius: 4px;
-        }
+     
+       }
+      svg {
+         /* background: #8b8fa37f; */
+        border-radius: 4px;
       }
     }
   }
@@ -192,17 +193,20 @@ enum SiderKey {
 
 const items = [
   {
+    key: SiderKey.Widgets,
+    icon: <InsertIcon />,
+  },
+
+  {
     key: SiderKey.State,
     icon: <LeftStateIcon />,
   },
+
   {
     key: SiderKey.Setting,
     icon: <LeftSettingIcon />,
   },
-  {
-    key: SiderKey.Widgets,
-    icon: <InsertIcon />,
-  },
+
 ];
 
 function EditorView(props: EditorViewProps) {
@@ -218,7 +222,7 @@ function EditorView(props: EditorViewProps) {
     () => setShowShortcutList(!showShortcutList),
     [showShortcutList]
   );
-  const [menuKey, setMenuKey] = useState<string>(SiderKey.State);
+  const [menuKey, setMenuKey] = useState<string>(SiderKey.Widgets);
   const [height, setHeight] = useState<number>();
   const dispatch = useDispatch();
 
@@ -359,7 +363,7 @@ function EditorView(props: EditorViewProps) {
               <Menu
                 theme="dark"
                 mode="inline"
-                defaultSelectedKeys={[SiderKey.State]}
+                defaultSelectedKeys={[SiderKey.Widgets]}
                 selectedKeys={panelStatus.left ? [menuKey] : [""]}
                 items={items.filter((item) => {
                   if (item.key !== SiderKey.Widgets) return true;

@@ -36,11 +36,13 @@ const RegisterButton=styled.button`
 `
 
 
+
 type FormLoginProps = {
   organizationId?: string;
 }
 
 export default function FormLogin(props: FormLoginProps) {
+
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -120,8 +122,9 @@ export default function FormLogin(props: FormLoginProps) {
             authGoal="login"
           />
         )}
+
         <Link to={{ pathname: AUTH_REGISTER_URL, state: location.state }}>
-        <RegisterButton>注册</RegisterButton>
+        <RegisterButton>{trans("userAuth.register")}</RegisterButton>
         </Link>
        
         {/* <label>
@@ -143,6 +146,6 @@ export default function FormLogin(props: FormLoginProps) {
           {trans("userAuth.register")}
         </StyledRouteLink>
       </AuthBottomView> */}
-    </>
+   </>
   );
 }

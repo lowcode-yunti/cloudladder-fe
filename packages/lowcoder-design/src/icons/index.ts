@@ -299,3 +299,4 @@ export { ReactComponent as AutoCompleteCompIcon } from "icons/icon-autocomplete-
 export { ReactComponent as WidthIcon } from "icons/icon-width.svg";
 export { ReactComponent as ResponsiveLayoutCompIcon } from "icons/icon-responsive-layout-comp.svg";
 export { ReactComponent as TextSizeIcon } from "./icon-text-size.svg";
+export { ReactComponent as NewAppIcon } from "./icon-app-new-app.svg";//New Add
