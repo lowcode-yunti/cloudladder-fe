@@ -10,7 +10,7 @@
     "node": "^14.18.0 || >=16.0.0"
   },
   "scripts": {
-    "start": " LOWCODER_API_SERVICE_URL=https://experimental.cloudladder.net.cn yarn workspace lowcoder start",
+    "start": "LOWCODER_API_SERVICE_URL=https://experimental.cloudladder.net.cn yarn workspace lowcoder start",
     "preview": "LOWCODER_API_SERVICE_URL=http://localhost:8080/ yarn workspace lowcoder preview",
     "start:ee": "REACT_APP_EDITION=enterprise yarn workspace lowcoder start",
     "start:ee-global": "REACT_APP_EDITION=enterprise-global yarn workspace lowcoder start",
